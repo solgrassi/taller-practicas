@@ -1,0 +1,83 @@
+{mplemente un módulo CargarLista que cree una lista de enteros y le
+agregue valores aleatorios entre el 100 y 150, hasta que se genere el
+120.
+b) Implemente un módulo ImprimirLista que reciba una lista generada en
+a) e imprima todos los valores de la lista en el mismo orden que están
+almacenados.
+c) Implemente un módulo BuscarElemento que reciba la lista generada
+en a) y un valor entero y retorne true si el valor se encuentra en la lista
+y false en caso contrario.
+d) Invocar desde el programa principal a los módulos implementados
+para crear una lista, mostrar todos sus elementos y determinar si un
+valor leído por teclado se encuentra o no en la lista.} 
+
+program actividad3;
+type
+rango= 100..150;
+lista =^nodo;
+
+nodo = record
+    dato: integer;
+    sig: nodo;
+end;
+
+procedure agregarA (var l:lista, num:integer);
+var
+nue: lista;
+begin
+	new (nue);
+  nue^.dato:= num;
+  nue^.sig:= l;
+  l:=nue;
+end;
+
+procedure CargarL (var l:lista);
+var
+num:integer;
+begin
+	randomize;
+  num:= random(rango) + 1;
+	while (num <> 120) do begin
+			agregarA(l, num);
+      num:= random (rango) + 1;
+	end;
+end;
+
+procedure imprimirL (l:lista);
+begin
+	while (l<> nil) do begin
+			write(l.dato);
+            l:=l^.sig;
+	end;
+end;
+
+Function buscarEle (l:lista; valor: integer): boolean;
+var
+esta:boolean;
+begin
+  esta:= false;
+	while (l<> nil) and (esta=false) do begin
+		if (l^.dato = valor) then
+            esta:=true
+		else
+            l:= l^.sig;
+	end;
+    buscarEle:= esta;
+end;
+
+var
+l:lista; valor: integer;
+begin
+  l:= nil;
+	CargarL(l);
+	imprimirL(l);
+	writeln('ingrese el valor a buscar');
+	readln(valor);
+	If (buscarEle(l, valor)) then
+	    writeln('el valor se encuentra en el vector');
+	else
+		writeln('el valor no se encuentra en el vector');
+end.
+
+
+
