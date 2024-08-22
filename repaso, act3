@@ -18,14 +18,14 @@ lista =^nodo;
 
 nodo = record
     dato: integer;
-    sig: nodo;
+    sig: lista;
 end;
 
-procedure agregarA (var l:lista, num:integer);
+procedure agregarA (var l:lista; num:integer);
 var
 nue: lista;
 begin
-	new (nue);
+  new (nue);
   nue^.dato:= num;
   nue^.sig:= l;
   l:=nue;
@@ -35,20 +35,20 @@ procedure CargarL (var l:lista);
 var
 num:integer;
 begin
-	randomize;
+  randomize;
   num:= random(rango) + 1;
-	while (num <> 120) do begin
-			agregarA(l, num);
-      num:= random (rango) + 1;
-	end;
+  while (num <> 120) do begin
+	agregarA(l, num);
+        num:= random (rango) + 1;
+  end;
 end;
 
 procedure imprimirL (l:lista);
 begin
-	while (l<> nil) do begin
-			write(l.dato);
-            l:=l^.sig;
-	end;
+  while (l<> nil) do begin
+  	write(l.dato);
+        l:=l^.sig;
+  end;
 end;
 
 Function buscarEle (l:lista; valor: integer): boolean;
@@ -58,8 +58,8 @@ begin
   esta:= false;
 	while (l<> nil) and (esta=false) do begin
 		if (l^.dato = valor) then
-            esta:=true
-		else
+                esta:=true
+	else
             l:= l^.sig;
 	end;
     buscarEle:= esta;
