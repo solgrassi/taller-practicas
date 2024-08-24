@@ -33,7 +33,8 @@ nodo = record
 end;
 
 vector = array [generos] of lista; 
-mayorp = array [generos] of integer;
+
+mayorp = array [generos] of pelicula;
 
 // inciso a//
 
@@ -48,12 +49,12 @@ begin
 end;
 
 
-procedure inicializarL (var l:lista);
+procedure inicializarL (var v:vector);
 var
 i:integer;
 begin
     for i:= 1 to tam do
-        v[i].l:= nil;
+        v[i]:= nil;
 end; 
 
 procedure agregarAtras(var L, ULT:lista; p: pelicula);
@@ -71,14 +72,72 @@ begin
 end;
 
     
-procedure cargarV (var v:vector);
+procedure cargarV (var v,ultimos:vector);
 var
-l:lista; p:pelicula; ULT: lista;
+p:pelicula;
 begin
   leerp(p); 				
   while(p.cod <> -1) do begin
-    v[p.cod]:= 
-    agregarAtras(L, ULT, p);	
+    agregarAtras(v[p.cod], ultimos[p.cod], p);	
     leerp(p);
   end;
  end;
+ 
+// inciso b//
+procedure maximos( l:lista; var max: pelicula);
+var
+aux: real;
+begin
+	aux:= -1; 
+	while (l<> nil) do begin
+			if (l^.dato.promedio > aux ) then begin
+				aux:= l^.dato.promedio;
+				max:= l^.dato;
+				l:= l^.sig;
+				end;
+		end;
+end;
+
+
+procedure recorrerV (v: vector; var m: mayorp);
+var
+i: integer; max: pelicula;
+begin
+	for i:= 1 to tam do begin
+		maximos(v[i], max) ; 
+		m[i]:= max;
+	end;
+end;
+
+// insciso c// 
+procedure insercion (var m:mayorp);
+var
+i, j: generos; actual:real;
+begin
+    for i:= 2 to tam do begin
+        actual:= m[i].promedio;
+        j:= i -1;
+        while (j> 0) and (m[j].promedio > actual) do begin
+            m[j+1]:= m[j];
+            j:= j -1;
+        end;
+        m[j+1].promedio:= actual;
+    end;
+end;
+		
+// inciso d//
+procedure maxymin (m:mayorp);
+begin
+	writeln('el codigo de la pelicula con mayor puntaje es: ', m[1].cod);
+	writeln('el codigo de la pelicula con menor puntaje es:', m[tam].cod);
+end;
+
+var
+v,ultimos: vector; m:mayorp;
+begin
+	inicializarL(v);
+	cargarV(v,ultimos);
+	recorrerV(v,m);
+	insercion( m);
+	maxymin (m);
+end.
