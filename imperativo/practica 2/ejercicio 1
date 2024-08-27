@@ -1,1 +1,89 @@
+{2.- Escribir un programa que:
+a. Implemente un módulo recursivo que genere y retorne una lista de números enteros
+“random” en el rango 100-200. Finalizar con el número 100.
+b. Un módulo recursivo que reciba la lista generada en a) e imprima los valores de la lista en el
+mismo orden que están almacenados.
+c. Implemente un módulo recursivo que reciba la lista generada en a) e imprima los valores de
+la lista en orden inverso al que están almacenados.
+d. Implemente un módulo recursivo que reciba la lista generada en a) y devuelva el mínimo
+valor de la lista.
+e. Implemente un módulo recursivo que reciba la lista generada en a) y un valor y devuelva
+verdadero si dicho valor se encuentra en la lista o falso en caso contrario.}
+
+program ejercicio2;
+const
+
+type
+lista =^nodo;
+nodo = record
+    dato: integer;
+    sig: lista;
+end;
+
+//inciso a//
+procedure agregarA (var l:lista; num:integer);
+var
+nue: lista;
+begin
+  new (nue);
+  nue^.dato:= num;
+  nue^.sig:= l;
+  l:=nue;
+end;
+
+procedure enterosrandom (var l:lista; rango, min: integer );
+var
+num: integer;
+begin
+    num:= min - random(rango);
+    if (num <> 100) do begin
+        agregarA(l, num);
+        enterosrandom(l,rango, min)
+    end;
+end;
+
+//inciso b//
+procedure imprimirorden (l: lista);
+begin
+    if (l<> nil) do begin
+        writeln(l^.dato);
+        l:=l^.sig;
+        imprimirL(l);
+    end;
+end;
+
+//inciso c//
+procedure imprimirinverso (l:lista);
+begin
+    if (l<> nil) do begin
+        imprimirinverso(l);
+        writeln(l^.dato);
+    end;
+end;
+
+//inciso d//
+
+function minimo (l:lista; var num: integer): integer;
+var
+res: integer;
+begin
+   
+        
+    
+end;
+        
+
+var
+rango: integer; l: lista; max,min,num: integer; 
+begin
+    max:= 200; min:= 100; num:= 201;
+    l:= nil;
+    rango:= max - min + 1;
+    randomize;
+    CargarL(l, rango, min)
+    imprimirorden(l);
+    imprimirinverso(l);
+    writeln('el minimo valor de la lista es: ', minimo(l));
+    
+
 
