@@ -11,79 +11,102 @@ e. Implemente un módulo recursivo que reciba la lista generada en a) y un valor
 verdadero si dicho valor se encuentra en la lista o falso en caso contrario.}
 
 program ejercicio2;
-const
 
 type
-lista =^nodo;
+lista = ^nodo;
+
 nodo = record
     dato: integer;
     sig: lista;
 end;
 
+
 //inciso a//
-procedure agregarA (var l:lista; num:integer);
+procedure agregarA (var l:lista; n:integer);
 var
-nue: lista;
+nue:lista;
 begin
-  new (nue);
-  nue^.dato:= num;
-  nue^.sig:= l;
-  l:=nue;
+    new(nue);
+    nue^.dato:= n;
+    nue^.sig:= l;
+    l:=nue;
 end;
 
-procedure enterosrandom (var l:lista; rango, min: integer );
+procedure cargarL (l: lista; rango, min: integer);
 var
-num: integer;
+num:integer;
 begin
-    num:= min - random(rango);
-    if (num <> 100) do begin
-        agregarA(l, num);
-        enterosrandom(l,rango, min)
-    end;
+    num:= min + random (rango);
+    if (num <> 100) then begin
+        cargarL(l,rango,min);
+        agregarA(l,num); 
+    end; 
 end;
 
-//inciso b//
-procedure imprimirorden (l: lista);
+// inciso b//
+
+procedure imprimirL (l:lista);
 begin
-    if (l<> nil) do begin
+    if (l <> nil) then begin
         writeln(l^.dato);
-        l:=l^.sig;
-        imprimirL(l);
+        imprimirL(l^.sig);
     end;
 end;
 
 //inciso c//
-procedure imprimirinverso (l:lista);
+procedure imprimirInv (l:lista);
 begin
-    if (l<> nil) do begin
-        imprimirinverso(l);
+    if (l<> nil) then begin
+        imprimirInv(l^.sig);
         writeln(l^.dato);
     end;
 end;
 
-//inciso d//
 
-function minimo (l:lista; var num: integer): integer;
+//inciso d// 
+function minimo ( l:lista): integer;
 var
-res: integer;
+aux: integer;
 begin
-   
-        
-    
-end;
-        
+    if (l= nil) then 
+        minimo:= 9999
+    else begin
+        aux:= minimo (l^.sig);
+        if (l^.dato< aux) then 
+            minimo:= l^.dato
+        else
+            minimo:= aux;
+    end;
+end; 
+
+//inciso e//
+function esta (l:lista; valor:integer): boolean;
+begin
+   if (l= nil) then
+        esta:= false
+   else 
+        if (l^.dato = valor) then
+            esta:= true
+        else
+            esta:= esta (l^.sig, valor);
+end; 
+
 
 var
-rango: integer; l: lista; max,min,num: integer; 
+l :lista; valor,max, min, rango: integer;
 begin
-    max:= 200; min:= 100; num:= 201;
     l:= nil;
+    max:= 200; min:= 100; 
     rango:= max - min + 1;
     randomize;
-    CargarL(l, rango, min)
-    imprimirorden(l);
-    imprimirinverso(l);
-    writeln('el minimo valor de la lista es: ', minimo(l));
-    
-
-
+    cargarL(l,rango, min);
+    imprimirL(l);
+    imprimirInv(l);
+    writeln(' el minimo valor de la lista es: ', minimo(l));
+    writeln('ingrese el valor a buscar en la lista');
+    readln(valor);
+    if (esta(l, valor)) then
+        writeln('el numero: ', valor, ' si esta en la lista')
+    else
+         writeln('el numero: ', valor, ' no esta en la lista');
+end. 
