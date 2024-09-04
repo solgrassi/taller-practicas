@@ -103,13 +103,24 @@ begin
 end;
 
 // inciso c//
-function mayor(a:arbol): integer;
+function maximo ( a:arbol): integer;
 var
+aux,auxD: integer;
 begin
-    if (a=nil) then
-        mayor:=0;
-    else
-        mayor:= mayor(a^.HI);
+    if (a= nil) then 
+        maximo:= 0
+    else begin
+        aux:= maximo (a^.HI);
+        auxD:= maximo(a^.HD);
+        
+        if (a^.dato.prod.totunidad > aux) then 
+            aux:= a^.dato.codigo;
+        if (auxD > aux) then
+            maximo:=auxD
+        else
+            maximo:= aux;
+    end;
+end;
         
 var
 a:arbol;
@@ -117,4 +128,5 @@ begin
     a:=nil;
     cargarA(a);
     imprimir(a);
+    writeln('el codigo del producto con mayor cantidad de unidades vendidas es: ', maximo(a));
 end. 
