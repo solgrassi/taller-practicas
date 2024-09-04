@@ -1,0 +1,120 @@
+{Implementar un programa modularizado para una librería. Implementar módulos para:
+a. Almacenar los productos vendidos en una estructura eficiente para la búsqueda por
+código de producto. De cada producto deben quedar almacenados su código, la
+cantidad total de unidades vendidas y el monto total. De cada venta se lee código de
+venta, código del producto vendido, cantidad de unidades vendidas y precio unitario. El
+ingreso de las ventas finaliza cuando se lee el código de venta -1.
+b. Imprimir el contenido del árbol ordenado por código de producto.
+c. Retornar el código de producto con mayor cantidad de unidades vendidas.
+d. Retornar la cantidad de códigos que existen en el árbol que son menores que un valor
+que se recibe como parámetroe. Retornar el monto total entre todos los códigos de productos comprendidos entre dos
+valores recibidos (sin incluir) como parámetros.}
+
+program ajercicio3; 
+type
+producto = record
+    codigo: integer;
+    totunidad:integer;
+    montotot: real;
+end;
+
+productos = record
+    codigo: integer;
+    prod: producto;
+end; 
+
+arbol =^nodo;
+
+nodo = record
+    dato: productos;
+    HI:arbol;
+    HD: arbol;
+end;
+
+//inciso a//
+procedure leerv (var p:producto; var v:integer);
+begin
+    writeln('ingrese el codigo de venta');
+    readln(v);
+    if (v <> 0) then begin
+        writeln('ingrese la cantidad vendida');
+        readln(p.totunidad);
+        writeln('ingrese el precio por unidad');
+        readln(p.montotot);
+        p.montotot:= p.montotot* p.totunidad;
+    end;
+end;
+
+procedure sumar (var a:arbol; p:producto);
+begin
+     a^.dato.prod.totunidad:= a^.dato.prod.totunidad + p.totunidad;
+     a^.dato.prod.montotot:= a^.dato.prod.montotot + p.montotot;
+end;
+
+procedure agregarA (var a:arbol;codigo: integer; p: producto);
+var
+aux: arbol;
+begin
+    if (a= nil) then begin
+        new(aux);
+        aux^.dato.codigo:= codigo;
+        aux^.dato.prod:= p;
+        aux^.HI:=nil;
+        aux^.HD:= nil;
+        a:=aux;
+    end
+    else begin
+        if (codigo < a^.dato.codigo) then
+            agregarA(a^.HI, codigo,p)
+        else
+            if(codigo = a^.dato.codigo) then
+               sumar(a,p)
+            else
+                agregarA(a^.HD, codigo,p);
+    end;
+end;
+
+
+
+
+procedure cargarA(var a:arbol);
+var
+codigo: integer; p:producto; v:integer;
+begin
+    leerv(p,v);
+    while (v <> 0) do begin
+        writeln('ingrese el codigo del producto');
+        readln(codigo);
+        agregarA(a,codigo,p);
+        leerv(p,v);
+    end;
+end;
+
+//inciso b//
+procedure imprimir (a:arbol);
+begin
+    if (a<> nil) then begin
+        imprimir(a^.HI);
+        writeln('el codigo del producto es:', a^.dato.codigo);
+        writeln('la cantidad total de uni vendidas es:', a^.dato.prod.totunidad);
+        writeln('el monto total para este producto es: ', a^.dato. prod.montotot:2:0);
+        imprimir(a^.HD);
+    end;
+end;
+
+// inciso c//
+function mayor(a:arbol): integer;
+var
+begin
+    if (a=nil) then
+        mayor:=0;
+    else
+        mayor:= mayor(a^.HI);
+        
+var
+a:arbol;
+begin
+    a:=nil;
+    cargarA(a);
+    imprimir(a);
+end. 
