@@ -7,7 +7,8 @@ ingreso de las ventas finaliza cuando se lee el código de venta -1.
 b. Imprimir el contenido del árbol ordenado por código de producto.
 c. Retornar el código de producto con mayor cantidad de unidades vendidas.
 d. Retornar la cantidad de códigos que existen en el árbol que son menores que un valor
-que se recibe como parámetroe. Retornar el monto total entre todos los códigos de productos comprendidos entre dos
+que se recibe como parámetroe. 
+e.Retornar el monto total entre todos los códigos de productos comprendidos entre dos
 valores recibidos (sin incluir) como parámetros.}
 
 program ajercicio3; 
@@ -103,30 +104,57 @@ begin
 end;
 
 // inciso c//
-function maximo ( a:arbol): integer;
-var
-aux,auxD: integer;
+procedure maximo(a:arbol; var cod,cant:integer ); 
 begin
-    if (a= nil) then 
-        maximo:= 0
+	if (a<>nil) then begin
+		if (cant < a^.dato.prod.totunidad) then begin
+			cod:=a^.dato.codigo;
+			cant:=a^.dato.prod.totunidad;
+		end;
+		maximo(a^.HI,cod,cant);
+		maximo(a^.HD,cod,cant);
+	end;
+end;
+ 
+// inciso d//
+function cantmenos (a:arbol; valor:integer): integer;
+begin
+    if (a=nil) then
+        cantmenos:=0
     else begin
-        aux:= maximo (a^.HI);
-        auxD:= maximo(a^.HD);
-        
-        if (a^.dato.prod.totunidad > aux) then 
-            aux:= a^.dato.codigo;
-        if (auxD > aux) then
-            maximo:=auxD
-        else
-            maximo:= aux;
+        cantmenos:= cantmenos(a^.HI,valor) + cantmenos(a^.HD, valor);
+        if (a^.dato.codigo < valor) then
+            cantmenos:= cantmenos + 1;
     end;
 end;
+
+//inciso e//
+function mtotal(a:arbol; min,max:integer): real;
+begin
+    if (a=nil) then 
+        mtotal:= 0
+    else begin 
+        mtotal:= mtotal(a^.HI, min,max) + mtotal(a^.HD, min,max);
+        if (a^.dato.codigo> min) and (a^.dato.codigo < max) then
+            mtotal:= mtotal + a^.dato.prod.montotot;
+    end;
+end;
+            
         
 var
-a:arbol;
+a:arbol; valor: integer;min,max,cod,cant:integer; 
 begin
     a:=nil;
     cargarA(a);
     imprimir(a);
-    writeln('el codigo del producto con mayor cantidad de unidades vendidas es: ', maximo(a));
+    maximo(a,cod,cant);
+    writeln('el codigo del producto con mayor cantidad de unidades vendidas es: ', cod);
+    writeln('ingrese el valor de parametro');
+    readln(valor);
+    writeln('la cantidad de codigos menores a ', valor, 'es: ', cantmenos(a,valor));
+    writeln('ingrese el minimo del rango');
+    read(min);
+    writeln('ingrese el maximo del rango');
+    readln(max);
+    writeln('el monto total de los codigos entre el ', min, 'y el ', max, ' es: ', mtotal(a,min,max):0:2);
 end. 
