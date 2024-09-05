@@ -122,4 +122,3 @@ else
     writeln('no se ha encontrado la oficina');
 writeln('el monto total de las expensas es: ', montotot(v,dl):0:2);
 end.
-end.
