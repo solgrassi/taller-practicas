@@ -73,6 +73,19 @@ nodo2=record
     HD:arbol2;
 end;
 
+//lista2//
+isbnypres = record
+    isbn:integer;
+    cantpresta:integer;
+end;
+lista2=^nodol;
+
+nodol = record
+    dato:isbnypres;
+    sig:lista2;
+end;
+
+
 //inciso a//
 procedure leerp (var p:prestamo);
 begin
@@ -199,10 +212,52 @@ begin
 end;
 end;
 
+//inciso f//
+procedure agregarAtras (var lis,ult:lista2;isbn:integer);
 var
-a:arbol1; b:arbol2; socio:integer;
+nue:lista2;
 begin
-a:=nil; b:=nil;
+    if (ult<> nil) and (ult^.dato.isbn = isbn) then
+        ult^.dato.cantpresta:= ult^.dato.cantpresta+ 1
+    else begin
+        new(nue);
+        nue^.dato.isbn:=isbn;
+        nue^.dato.cantpresta:=1;
+        nue^.sig:=nil;
+        if (lis=nil) then
+            lis:=nue
+        else
+            ult^.sig:=nue;
+        ult:=nue;
+        end;
+    
+end;
+
+procedure cargarlista2 (var lis,ult:lista2; a:arbol1);
+begin
+    if (a<> nil) then begin
+        cargarlista2(lis,ult,a^.HI);
+        agregarAtras(lis,ult, a^.dato.isbn);
+        cargarlista2(lis,ult,a^.HD);
+    end;
+end;
+
+//control//
+procedure imprimirlista (lis:lista2);
+begin
+    while (lis <> nil) do begin
+        writeln('numero de isbn: ', lis^.dato.isbn);
+        writeln('cantidad de prestamos: ', lis^.dato.cantpresta); 
+        lis:=lis^.sig;
+    end;
+end;
+
+// 
+
+var
+a:arbol1; b:arbol2; socio:integer;lis,ult:lista2;
+begin
+a:=nil; b:=nil; lis:=nil; ult:= nil;
 cargarArboles(a,b);
 writeln('el isbn mayor del arbol 1 es: ', isbnmayor(a));
 writeln('el isbn menor del arbol 2 es: ', isbnmenor(b));
@@ -212,4 +267,6 @@ writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',c
 writeln('ingrese el numero de socio para calcular sus prestamos');
 readln(socio);
 writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres2(b,socio));
+cargarlista2(lis,ult,a);
+imprimirlista(lis);
 end.
