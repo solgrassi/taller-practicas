@@ -74,9 +74,6 @@ nodo2=record
 end;
 
 //inciso a//
-Un módulo que lea préstamos y retorne 2 estructuras de datos con la información de
-los préstamos. La lectura de los préstamos finaliza con ISBN 0. Las estructuras deben
-ser eficientes para buscar por ISBN.
 procedure leerp (var p:prestamo);
 begin
     writeln('ingrese numero de socio');
@@ -87,21 +84,105 @@ begin
     readln(p.diasprest);
 end;
 
-procedure agregarele(var a:arbol1; isbn: integer; p:producto); 
+procedure agregarele(var a:arbol1; isbn: integer; p:prestamo); 
 var
 aux: arbol1;
 begin
-    if (a=nil)  then
-procedure cargarA (var a:arbol1);
+    if (a=nil)  then begin
+        new(aux);
+        aux^.dato.isbn:=isbn;
+        aux^.dato.pres:=p;
+        aux^.HI:=nil;
+        aux^.HD:= nil;
+        a := aux;
+    end
+    else begin
+        if (a^.dato.isbn <= isbn) then
+            agregarele(a^.HD,isbn,p)
+        else
+            agregarele(a^.HI, isbn,p);
+    end;
+end;
+
+procedure agregarAd (var l:lista; p:prestamo);
+var
+nue:lista;
+begin
+    new(nue);
+    nue^.dato:=p;
+    nue^.sig:= l;
+    l:=nue;
+end;
+
+procedure agregarlista (var b:arbol2; isbn:integer; p:prestamo);
+var
+aux:arbol2;
+begin
+    if (b=nil) then begin
+        new(aux);
+        aux^.dato.isbn:= isbn;
+        aux^.dato.pres:=nil;
+        agregarAd(aux^.dato.pres,p);
+        aux^.HI := nil;
+		aux^.HD := nil;
+        b:=aux;
+    end
+    else begin
+        if (isbn=b^.dato.isbn) then
+            agregarAd(b^.dato.pres, p)
+        else
+            if (isbn< b^.dato.isbn) then
+                agregarlista(b^.HI, isbn,p)
+            else
+                agregarlista(b^.HD, isbn, p);
+    end;
+end;
+
+    
+procedure cargarArboles (var a:arbol1; var b:arbol2);
 var
 p:prestamo; isbn: integer;
 begin
-    writeln('ingrese el ISB del libro');
+    writeln('ingrese el ISBN del libro');
     readln(isbn);
     while (isbn <> 0) do begin
         leerp(p);
         agregarele (a,isbn,p);
-        writeln('ingrese el ISB del libro');
+        agregarlista (b,isbn,p);
+        writeln('ingrese el ISBN del libro');
         readln(isbn);
     end;
 end;
+
+// inciso b//
+function isbnmayor (a:arbol1): integer;
+begin
+    if (a^.HD = nil) then
+        isbnmayor:=a^.dato.isbn
+    else
+        isbnmayor:= isbnmayor (a^.HD);
+end;
+
+//inciso c//
+function isbnmenor (b:arbol2): integer;
+begin
+    if( b^.HI = nil) then
+        isbnmenor:= b^.dato.isbn
+    else
+        isbnmenor:=isbnmenor (b^.HI);
+end;
+
+//inciso d//
+Un módulo recursivo que reciba la estructura generada en i. y un número de socio. El
+módulo debe retornar la cantidad de préstamos realizados a dicho socio.
+function cantpres (a:arbol1; socio:integer): integer;
+begin
+
+var
+a:arbol1; b:arbol2;
+begin
+a:=nil; b:=nil;
+cargarArboles(a,b);
+writeln('el isbn mayor del arbol 1 es: ', isbnmayor(a));
+writeln('el isbn menor del arbol 2 es: ', isbnmenor(b));
+end.
