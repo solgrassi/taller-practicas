@@ -173,16 +173,38 @@ begin
 end;
 
 //inciso d//
-Un módulo recursivo que reciba la estructura generada en i. y un número de socio. El
-módulo debe retornar la cantidad de préstamos realizados a dicho socio.
 function cantpres (a:arbol1; socio:integer): integer;
 begin
+    if (a=nil) then
+        cantpres:=0
+    else begin
+        cantpres:= cantpres(a^.HI, socio) + cantpres(a^.HD,socio);
+        if (socio = a^.dato.pres.nsocio) then
+            cantpres:= cantpres + 1;
+    end;
+end;
+
+//inciso e//
+function cantpres2 (b:arbol2; socio:integer): integer;
+begin
+    if (a=nil) then
+        cantpres:=0
+    else begin
+        cantpres2:= cantpres2(a^.HI, socio) + cantpres2(a^.HD,socio);
+        if (socio = a^.dato.pres.nsocio) then
+            cantpres2:= cantpres2 + 1;
+    end;
+end;
 
 var
-a:arbol1; b:arbol2;
+a:arbol1; b:arbol2; socio:integer;
 begin
 a:=nil; b:=nil;
 cargarArboles(a,b);
 writeln('el isbn mayor del arbol 1 es: ', isbnmayor(a));
 writeln('el isbn menor del arbol 2 es: ', isbnmenor(b));
+writeln('ingrese el numero de socio para calcular sus prestamos');
+readln(socio);
+writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres(a,socio));
 end.
+
