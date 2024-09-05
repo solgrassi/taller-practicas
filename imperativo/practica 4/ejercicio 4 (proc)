@@ -187,13 +187,16 @@ end;
 //inciso e//
 function cantpres2 (b:arbol2; socio:integer): integer;
 begin
-    if (a=nil) then
-        cantpres:=0
+   if (b= nil) then
+    cantpres2:=0
     else begin
-        cantpres2:= cantpres2(a^.HI, socio) + cantpres2(a^.HD,socio);
-        if (socio = a^.dato.pres.nsocio) then
-            cantpres2:= cantpres2 + 1;
+    cantpres2:= cantpres2(b^.HI,socio) + cantpres2(b^.HD,socio);
+    if (b^.dato.pres <> nil) then begin
+        if (socio = b^.dato.pres^.dato.nsocio) then
+                cantpres2:= cantpres2 + 1;
+        b^.dato.pres:=b^.dato.pres^.sig;
     end;
+end;
 end;
 
 var
@@ -206,5 +209,7 @@ writeln('el isbn menor del arbol 2 es: ', isbnmenor(b));
 writeln('ingrese el numero de socio para calcular sus prestamos');
 readln(socio);
 writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres(a,socio));
+writeln('ingrese el numero de socio para calcular sus prestamos');
+readln(socio);
+writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres2(b,socio));
 end.
-
