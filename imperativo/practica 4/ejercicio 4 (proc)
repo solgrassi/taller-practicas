@@ -125,6 +125,7 @@ begin
     nue^.dato:=p;
     nue^.sig:= l;
     l:=nue;
+    writeln('Nodo agregado');
 end;
 
 procedure agregarlista (var b:arbol2; isbn:integer; p:prestamo);
@@ -141,8 +142,10 @@ begin
         b:=aux;
     end
     else begin
-        if (isbn=b^.dato.isbn) then
-            agregarAd(b^.dato.pres, p)
+        if (isbn=b^.dato.isbn) then begin
+            agregarAd(b^.dato.pres, p);
+            writeln('agregado');
+        end
         else
             if (isbn< b^.dato.isbn) then
                 agregarlista(b^.HI, isbn,p)
@@ -217,9 +220,9 @@ procedure agregarAtras (var lis,ult:lista2;isbn:integer);
 var
 nue:lista2;
 begin
-    if (ult<> nil) and (ult^.dato.isbn = isbn) then
-        ult^.dato.cantpresta:= ult^.dato.cantpresta+ 1
-    else begin
+        if (ult<> nil) and (ult^.dato.isbn = isbn) then
+            ult^.dato.cantpresta:= ult^.dato.cantpresta+ 1
+        else begin
         new(nue);
         nue^.dato.isbn:=isbn;
         nue^.dato.cantpresta:=1;
@@ -233,40 +236,112 @@ begin
     
 end;
 
-procedure cargarlista2 (var lis,ult:lista2; a:arbol1);
+procedure cargarlistaarbol1 (var lis,ult:lista2; a:arbol1);
 begin
     if (a<> nil) then begin
-        cargarlista2(lis,ult,a^.HI);
+        cargarlistaarbol1(lis,ult,a^.HI);
         agregarAtras(lis,ult, a^.dato.isbn);
-        cargarlista2(lis,ult,a^.HD);
+        cargarlistaarbol1(lis,ult,a^.HD);
     end;
 end;
 
-//control//
+//control//H//
 procedure imprimirlista (lis:lista2);
 begin
-    while (lis <> nil) do begin
+    if (lis <> nil) then begin
         writeln('numero de isbn: ', lis^.dato.isbn);
-        writeln('cantidad de prestamos: ', lis^.dato.cantpresta); 
+        writeln('cantidad de prestamos: ', lis^.dato.cantpresta);
+        imprimirlista(lis^.sig);
+    end;
+end;
+
+procedure imprimirlistaaa (lis:lista);
+begin
+    while (lis <> nil) do begin
+        writeln('cantidad de prestamos: ', lis^.dato.nsocio); 
         lis:=lis^.sig;
     end;
 end;
 
-// 
+// inciso g//
+procedure cargarlista2 (var lis2,ult2: lista2; isbn:integer; la:lista);
+var
+nue:lista2; cant:integer; 
+begin
+        cant:=0;
+        new(nue);
+        nue^.dato.isbn:=isbn;
+        while (la<> nil) do begin
+            cant:=cant + 1;
+            la:=la^.sig;
+        end;
+        nue^.dato.cantpresta:=cant;
+        nue^.sig:=nil;
+        if (lis2=nil) then
+            lis2:=nue
+        else
+            ult2^.sig:=nue;
+        ult2:=nue;
+end;
+    
+procedure cargarlistaarbol2 (var lis2, ult2: lista2; b:arbol2);
+begin
+    if (b<> nil) then begin
+        cargarlistaarbol2(lis2,ult2,b^.HI);
+        cargarlista2(lis2,ult2,b^.dato.isbn, b^.dato.pres);
+        cargarlistaarbol2(lis2,ult2,b^.HD);
+    end;
+end;
+
+//inciso i//
+function canttotal (a:arbol1; min,max:integer):integer;
+begin
+    if (a= nil) then
+        canttotal:=0
+    else begin
+        canttotal:= canttotal(a^.HI,min,max) + canttotal(a^.HD,min,max);
+        if (a^.dato.isbn<= max) and (a^.dato.isbn>= min) then
+            canttotal:= canttotal+1;
+    end;
+end;
+
+//inciso j//
+function canttotal2 (b:arbol2; min,max:integer):integer;
+begin
+    if (b= nil) then
+        canttotal2:=0
+    else begin
+        canttotal2:= canttotal2(b^.HI,min,max) + canttotal2(b^.HD,min,max);
+        if (b^.dato.isbn<= max) and (b^.dato.isbn>= min) then begin
+            while (b^.dato.pres <> nil) do begin
+                 canttotal2:= canttotal2+1;
+                b^.dato.pres:=b^.dato.pres^.sig;    
+            end;
+        end;
+    end;
+end;
 
 var
-a:arbol1; b:arbol2; socio:integer;lis,ult:lista2;
+a:arbol1; b:arbol2; socio,min,max:integer;lis,lis2,ult,ult2:lista2;
 begin
-a:=nil; b:=nil; lis:=nil; ult:= nil;
-cargarArboles(a,b);
-writeln('el isbn mayor del arbol 1 es: ', isbnmayor(a));
-writeln('el isbn menor del arbol 2 es: ', isbnmenor(b));
-writeln('ingrese el numero de socio para calcular sus prestamos');
-readln(socio);
-writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres(a,socio));
-writeln('ingrese el numero de socio para calcular sus prestamos');
-readln(socio);
-writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres2(b,socio));
-cargarlista2(lis,ult,a);
-imprimirlista(lis);
-end.
+	a:=nil; b:=nil; lis:=nil; ult:= nil;
+	cargarArboles(a,b);
+	writeln('el isbn mayor del arbol 1 es: ', isbnmayor(a));
+	writeln('el isbn menor del arbol 2 es: ', isbnmenor(b));
+	writeln('ingrese el numero de socio para calcular sus prestamos');
+	readln(socio);
+	writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres(a,socio));
+	writeln('ingrese el numero de socio para calcular sus prestamos');
+	readln(socio);
+	writeln('la cantidad de prestamos realizados al socio n°: ', socio, 'es de: ',cantpres2(b,socio));
+	cargarlistaarbol1(lis,ult,a);
+	imprimirlista(lis);
+	cargarlistaarbol2(lis2,ult2,b);
+	imprimirlista(lis2);
+	imprimirlistaaa(b^.dato.pres);
+	writeln('ingrese el numero de isbn menor del rango');
+	readln(min);
+	writeln('ingrese el numero de isbn mayor del rango');
+	readln(max);
+	writeln('la cantidad total de prestamos realizados entre el isbn ', min,' y el ',max,' es: ', canttotal(a,min,max));
+	writeln('la cantidad total de prestamos realizados entre el isbn ', min,' y el ',max,' es: ', canttotal2(b,min,max));
