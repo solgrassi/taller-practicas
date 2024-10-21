@@ -1,0 +1,66 @@
+{Realice un programa en el que 4 robots limpien de papeles el perímetro de un cuadrado de lado
+20 en sentido horario,El vértice inferior izquierdo del cuadrado se ubica en la esquina (10,10).
+Al finalizar, cada robot debe informar la cantidad de papeles juntados en su lado}
+
+programa ejercicio2
+procesos
+  proceso juntarPapeles (ES papeles:numero)
+  comenzar
+    si(HayPapelEnLaEsquina)
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        papeles:= papeles +1
+  fin  
+  proceso juntarTodo 
+  variables
+    papeles: numero
+  comenzar
+    papeles:=0
+    repetir 19
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+    Informar('cant papeles juntados', papeles)
+  fin 
+areas
+  area1: AreaP(10, 10, 10, 29)
+  area2: AreaP(10, 30, 29, 30)
+  area3: AreaP(30, 11, 30, 30)
+  area4: AreaP(11, 10, 30, 10)     
+robots
+  robot robot1
+  comenzar
+    juntarTodo
+  fin
+  robot robot2
+  comenzar
+    derecha
+    juntarTodo
+  fin
+  robot robot3
+  comenzar
+    repetir 2
+      derecha
+    juntarTodo
+  fin
+  robot robot4
+  comenzar
+    repetir 3
+      derecha
+    juntarTodo
+  fin
+variables
+  R1: robot1
+  R2: robot2
+  R3: robot3
+  R4: robot4
+comenzar
+  AsignarArea(R1, area1)
+  AsignarArea(R2, area2)
+  AsignarArea(R3, area3)
+  AsignarArea(R4, area4)
+  Iniciar(R1, 10,10)
+  Iniciar(R2, 10,30)
+  Iniciar(R3, 30,30)
+  Iniciar(R4, 30,10)
+fin
