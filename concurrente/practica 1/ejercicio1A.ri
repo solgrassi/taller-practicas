@@ -1,0 +1,52 @@
+{a) Modifique el programa anterior para que el mismo robot realice lo mismo en las avenidas 1, 3
+y 5.}
+
+programa ejercicio1
+procesos
+  proceso floresEsquina (ES flores:numero; ES cantVacio:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flores:= flores +1
+    sino 
+      cantVacio:= cantVacio +1
+  fin  
+  proceso recorrerAvenida(E ave:numero; ES flores:numero; ES cantVacio:numero )
+  comenzar
+    Pos(ave,1)
+    repetir 99
+      floresEsquina(flores,cantVacio)
+      mover
+    floresEsquina(flores,cantVacio)
+  fin
+  proceso depositarTodo (E flores:numero)
+  comenzar
+    repetir flores
+      depositarFlor
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    flores: numero
+    cantVacio:numero
+    ave:numero
+  comenzar
+    ave:=1
+    repetir 3
+      flores:=0
+      cantVacio:=0
+      recorrerAvenida(ave,flores,cantVacio)
+      depositarTodo(flores)
+      Informar('cant flores juntadas', flores)
+      Informar('cant esquinas vacias', cantVacio)
+      ave:= ave + 2
+  fin
+variables
+  R_info: robot1
+comenzar
+  AsignarArea(R_info, ciudad)
+  Iniciar(R_info, 1,1)
+fin
