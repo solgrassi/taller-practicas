@@ -1,0 +1,82 @@
+{) Realice un programa en el que 3 robots realicen escaleras de 4 escalones. El tamaño de cada
+escalón se incrementa en un 1 respecto al escalón anterior. El primer escalón será de 1x1, el
+segundo de 2x2, y así sucesivamente. Al finalizar el recorrido, cada robot debe informar la cantidad de escalones en los que la
+cantidad de papeles superó en 1 a la cantidad de flores. Las esquinas deben quedar sin
+modificar.}
+
+
+programa ejercicio2
+procesos
+  proceso juntarPapeles (ES papeles:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    si (HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        aux:= aux +1
+      papeles:=aux
+      repetir aux
+        depositarPapel
+  fin  
+  proceso juntarFlores (ES flores:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    si (HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        aux:= aux +1
+      flores:=aux
+      repetir aux
+        depositarFlor
+  fin
+  proceso escalon (ES flores:numero; ES papeles:numero; E pasos:numero)
+  comenzar
+    repetir 2
+      repetir pasos
+        juntarPapeles(papeles)
+        juntarFlores(flores)
+        mover
+      derecha
+    repetir 2
+      derecha
+  fin
+  proceso escalera (ES cantE:numero)
+  variables
+    flores, papeles, pasos: numero
+  comenzar
+    pasos:=1
+    repetir 4
+      flores:=0
+      papeles:=0
+      escalon(flores, papeles,pasos)
+      si(papeles - flores = 1)
+        cantE:= cantE +1
+      pasos:= pasos +1
+  fin
+areas
+  area: AreaC(1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantE:numero
+  comenzar
+    cantE:=0
+    escalera(cantE)
+    Informar ('la cantidad de escalones que cumplen', cantE)
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+comenzar
+  AsignarArea(R1, area)
+  AsignarArea(R2, area)
+  AsignarArea(R3, area)
+  Iniciar(R1, 12,14)
+  Iniciar(R2, 17,10)
+  Iniciar(R3, 22,6)
+fin
