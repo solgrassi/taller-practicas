@@ -5,7 +5,7 @@ cantidad de papeles superó en 1 a la cantidad de flores. Las esquinas deben que
 modificar.}
 
 
-programa ejercicio2
+programa ejercicio3
 procesos
   proceso juntarPapeles (ES papeles:numero)
   variables
