@@ -1,0 +1,90 @@
+{Realice un programa en el que 3 robots realizan una escalera de 4 escalones cada uno.
+Todos los escalones tienen un ancho fijo de 1, y un alto aleatorio entre 1 y 5. Al finalizar
+el recorrido, cada robot deberá enviar al robot jefe la cantidad de escalones que tenían
+más flores que papeles. Una vez que los tres robots finalizaron, el robot jefe deberá
+informar la suma de las cantidades enviadas por los 3 robots.
+○ El robot jefe inicia en la esquina (1,1)
+○ El robot 1 inicia en la esquina (2,1)
+○ El robot 2 inicia en la esquina (7,1)
+○ El robot 3 inicia en la esquina (12,1)} 
+
+
+programa ejericio2
+procesos
+  proceso juntarFlores (ES flores:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flores:= flores +1
+  fin
+  proceso juntarPapeles (ES papeles:numero)
+  comenzar
+    si (HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        papeles:= papeles +1
+  fin
+  proceso escalon(ES largo:numero; ES flores:numero; ES papeles:numero)
+  comenzar
+    repetir largo
+      juntarFlores(flores)
+      juntarPapeles(papeles)
+      mover
+    juntarFlores(flores)
+    juntarPapeles(papeles)
+    derecha
+    mover
+    juntarFlores(flores)
+    juntarPapeles(papeles)
+    repetir 3
+      derecha
+  fin
+  proceso escalera (ES cantE:numero)
+  variables
+    flores,papeles,lar:numero
+  comenzar
+    repetir 4
+      flores:=0
+      papeles:=0
+      Random(lar, 1,5)
+      escalon (lar, flores,papeles)
+      si (flores>papeles)
+        cantE:= cantE +1
+  fin
+areas
+  area1: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantEs:numero
+  comenzar
+    cantEs:=0
+    escalera(cantEs)
+    EnviarMensaje(cantEs, fisca)
+  fin
+  robot robot2
+  variables
+    suma,cant: numero
+  comenzar
+    suma:=0
+    repetir 3
+      RecibirMensaje (cant, *)
+      suma:= suma + cant
+    Informar(suma)
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  fisca: robot2
+comenzar
+  AsignarArea(R1, area1)
+  AsignarArea(R2, area1)
+  AsignarArea(R3, area1)
+  AsignarArea(fisca, area1)
+  Iniciar(R1, 2,1)
+  Iniciar(R2, 7,1)
+  Iniciar(R3,12,1)
+  Iniciar(fisca, 1,1)
+fin
