@@ -1,0 +1,79 @@
+{Modifique el ejercicio anterior para que ahora participen 6 robots
+○ Robot 1: Avenida 1, entre las calles 1 y 10
+○ Robot 2: Avenida 2, entre las calles 11 y 20
+○ Robot 3: Avenida 3, entre las calles 21 y 30
+○ Robot 4: Avenida 4, entre las calles 31 y 40
+○ Robot 5: Avenida 5, entre las calles 41 y 50
+○ Robot 6: Avenida 6, entre las calles 51 y 60
+○ Fiscalizador: Avenida 2, calle 1
+El fiscalizador deberá informar la cantidad de flores que juntó el robot ganador.}
+
+programa ejericio1C
+procesos
+  proceso juntarFlores (ES flores:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flores:= flores +1
+  fin
+  proceso recorrerAvenida(ES flores: numero)
+  comenzar
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+areas
+  area1: AreaP (1,1,1,10)
+  area2: AreaP (2,11,2,20)
+  area3: AreaP (3,21,3,30)
+  area4: AreaP (4,31,4,40)
+  area5: AreaP (5,41,5,50)
+  area6: AreaP (6,51, 6,60)
+  areaf: AreaP (2,1,2,1)
+robots
+  robot robot1
+  variables
+    flores:numero
+  comenzar
+    flores:=0
+    recorrerAvenida(flores)
+    EnviarMensaje(flores, fisca)
+  fin
+  robot robot2
+  variables
+    flo:numero
+    max:numero
+  comenzar
+    max:=0
+    repetir 6
+      RecibirMensaje(flo,*)
+      si (flo>max)
+        max:=flo
+    Informar(max)
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  R4: robot1
+  R5: robot1
+  R6: robot1
+  fisca: robot2
+comenzar
+  AsignarArea(R1, area1)
+  AsignarArea(R2, area2)
+  AsignarArea(R3, area3)
+  AsignarArea(R4, area4)
+  AsignarArea(R5, area5)
+  AsignarArea(R6, area6)
+  AsignarArea(fisca, areaf)
+  Iniciar(R1, 1,1)
+  Iniciar(R2, 2,11)
+  Iniciar(R3,3,21)
+  Iniciar(R4,4,31)
+  Iniciar(R5,5,41)
+  Iniciar(R6,6,51)
+  Iniciar(fisca, 2,1)
+fin
