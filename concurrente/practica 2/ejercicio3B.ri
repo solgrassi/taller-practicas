@@ -1,0 +1,106 @@
+{Modifique el programa anterior para que cada equipo repita el recorrido con las
+siguientes 20 esquinas de sus correspondientes calles.}
+
+programa ejericio3
+procesos
+  proceso juntarFlores (ES flores:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flores:= flores +1
+  fin
+  proceso juntarPapeles (ES papeles:numero)
+  comenzar
+    si (HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        papeles:= papeles +1
+  fin
+  proceso recorrerP (ES papeles:numero)
+  comenzar
+    repetir 9
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+  fin
+  proceso recorrerF (ES flores:numero)
+  comenzar
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+areas
+  area1: AreaP (1,1,10,1)
+  area1B: AreaP (21,1,30,1)
+  area2: AreaP (11,1,20,1)
+  area2B: AreaP (31,1,40,1)
+  area3: AreaP (1,5,10,5)
+  area3B: AreaP (21,5,30,5)
+  area4: AreaP (11,5,20,5)
+  area4B: AreaP (31, 5, 40,5)
+robots
+  robot robot1
+  variables
+    papeles,flores:numero
+  comenzar
+    derecha
+    papeles:=0
+    flores:=0
+    si (PosCa = 1)
+      recorrerP(papeles)
+      EnviarMensaje(papeles, A2)
+      Pos(21,1)
+      RecibirMensaje(papeles,A2)
+      recorrerP(papeles)
+      EnviarMensaje(papeles,A2)
+    sino
+      recorrerF(flores)
+      EnviarMensaje(flores,B2)
+      Pos(21,5)
+      RecibirMensaje(flores,B2)
+      recorrerF(flores)
+      EnviarMensaje(flores,B2)
+  fin
+  robot robot2
+  variables
+    papeles,flores:numero
+  comenzar
+    derecha
+    si (PosCa=1)
+      RecibirMensaje (papeles, A1)
+      recorrerP(papeles)
+      EnviarMensaje(papeles,A1)
+      Pos(31,1)
+      RecibirMensaje(papeles,A1)
+      recorrerP(papeles)
+      Informar(papeles)
+    sino
+      RecibirMensaje(flores,B1)
+      recorrerF(flores)
+      EnviarMensaje(flores,B1)
+      Pos(31,5)
+      RecibirMensaje(flores,B1)
+      recorrerF(flores)
+      Informar(flores)
+  fin
+variables
+  A1: robot1
+  A2: robot2
+  B1: robot1
+  B2: robot2
+comenzar
+  AsignarArea(A1, area1)
+  AsignarArea(A1, area1B)
+  AsignarArea(A2, area2)
+  AsignarArea(A2, area2B)
+  AsignarArea(B1, area3)
+  AsignarArea(B1, area3B)
+  AsignarArea(B2, area4)
+  AsignarArea(B2, area4B)
+  Iniciar(A1, 1,1)
+  Iniciar(A2, 11,1)
+  Iniciar(B1,1,5)
+  Iniciar(B2, 11,5)
+fin
