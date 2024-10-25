@@ -64,7 +64,7 @@ procesos
         si(num=3)
           EnviarMensaje(gano,reco3)
         sino
-          EnviarMensaje(num,reco4)
+          EnviarMensaje(gano,reco4)
   fin
 areas
   cuadrado: AreaPC (25,25,75,75)
@@ -77,34 +77,37 @@ robots
   robot fiscalizador
   variables
     rob:numero
-    quien:numero
-    t1,t2,t3,t4:numero
+    max:numero
+    t1,t2,t3,t4,f:numero
     numrob:numero
   comenzar
-    t1:=0
-    t2:=0
-    t3:=0
-    t4:=0
     repetir 10
       Random(rob,1,4)
       si (rob=1)
         EnviarMensaje(V,reco1)
-        EnviarMensaje(t1,reco1)
-        RecibirMensaje(t1,reco1)
+        RecibirMensaje(f,reco1)
       sino
         si(rob=2)
           EnviarMensaje(V,reco2)
-          EnviarMensaje(t2,reco2)
-          RecibirMensaje(t2,reco2)
+          RecibirMensaje(f,reco2)
         sino
           si(rob=3)
             EnviarMensaje(V,reco3)
-            EnviarMensaje(t3,reco3)
-            RecibirMensaje(t3,reco3)
+            RecibirMensaje(f,reco3)
           sino
             EnviarMensaje(V,reco4)
-            EnviarMensaje(t4,reco4)
-            RecibirMensaje(t4,reco4)
+            RecibirMensaje(f,reco4)
+            
+            
+            
+    EnviarMensaje(F,reco1)
+    EnviarMensaje(F, reco2)
+    EnviarMensaje(F,reco3)
+    EnviarMensaje(F,reco4)
+    RecibirMensaje(t1,reco1)
+    RecibirMensaje(t2,reco2)
+    RecibirMensaje(t3,reco3)
+    RecibirMensaje(t4,reco4)
     maximo(t1,t2,t3,t4,max)
     numrob:=1
     repetir 4
@@ -112,20 +115,24 @@ robots
         ganador(numrob,V)
       sino
         ganador(numrob,F)
-      numrob:= numRob+1   
+      numrob:= numrob+1   
   fin
   robot reco
   variables
+    tot: numero
     cant:numero
     acceso:boolean
     gane:boolean
   comenzar
+    cant:=0
+    tot:=0
     RecibirMensaje (acceso,fisca)
-    RecibirMensaje(cant,fisca)
-    mientras (acceso)
+    mientras(acceso)
       poscuadrado(cant)
-      EnviarMensaje(cant,fisca)
+      tot:= tot+ cant
+      EnviarMensaje(1,fisca)
       RecibirMensaje(acceso,fisca)
+    EnviarMensaje(tot,fisca)
     RecibirMensaje(gane,fisca)
     si (gane)
       Pos(50,50)
