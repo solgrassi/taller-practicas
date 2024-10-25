@@ -97,9 +97,6 @@ robots
           sino
             EnviarMensaje(V,reco4)
             RecibirMensaje(f,reco4)
-            
-            
-            
     EnviarMensaje(F,reco1)
     EnviarMensaje(F, reco2)
     EnviarMensaje(F,reco3)
