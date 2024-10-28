@@ -1,0 +1,116 @@
+{Realice un programa donde 4 robots colaboren para recoger todas las flores de una
+esquina indicada por un robot jefe, seleccionada de manera aleatoria dentro del cuadrante
+(2,2) y (10,10). Para ello el jefe determina inicialmente una esquina y los robots deben
+accederla, tomar de a una las flores y volver a su posición inicial. Cuando los robots
+terminan el jefe deberá informar cuál de ellos logró recoger más flores.
+Las esquinas de inicio de los robots deberán ser jefe (1,1) y robots (2,1), (3, 1), (4,1) y (5,1).}
+
+programa ejercicio3
+procesos
+  proceso recolectar (ES tot:numero; ES termino:boolean)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      tomarFlor
+      tot:=tot +1
+    sino
+      termino:=V
+  fin
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    EnviarMensaje(4,R4)
+  fin
+  proceso hacerEsquina (E av:numero; E ca:numero; ES tot:numero; ES termino:boolean)
+  variables
+    iniA,iniC,flo,pap:numero
+  comenzar
+    flo:=0
+    pap:=0
+    iniA:=PosAv
+    iniC:=PosCa
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    recolectar(tot,termino)
+    Pos(iniA,iniC)
+    LiberarEsquina(av,ca)
+  fin
+areas
+  areaC: AreaPC (2,2,10,10)
+  fisca: AreaP (1,1,1,1)
+  uno: AreaP(2,1,2,1)
+  dos: AreaP(3,1,3,1)
+  tres: AreaP(4,1,4,1)
+  cuatro: AreaP (5,1,5,1)
+robots
+  robot reco
+  variables
+    id,tot,av,ca:numero
+    termino:boolean
+  comenzar
+    tot:=0
+    termino:=F
+    RecibirMensaje(id,fisca)
+    RecibirMensaje(av,fisca)
+    RecibirMensaje(ca,fisca)
+    mientras(termino=F)
+      hacerEsquina(av,ca,tot,termino)
+    EnviarMensaje(id,fisca)
+    EnviarMensaje(tot,fisca)
+  fin
+  robot fiscalizador
+  variables
+    av,ca,id,tot,max,maxid:numero
+  comenzar
+    max:=-1
+    enviarID
+    Random(av,2,10)
+    Random(ca,2,10)
+    EnviarMensaje(av,R1)
+    EnviarMensaje(ca,R1)
+    EnviarMensaje(av,R2)
+    EnviarMensaje(ca,R2)
+    EnviarMensaje(av,R3)
+    EnviarMensaje(ca,R3)
+    EnviarMensaje(av,R4)
+    EnviarMensaje(ca,R4)
+    repetir 4
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(tot, R1)
+      sino
+        si(id=2)
+          RecibirMensaje(tot, R2)
+        sino
+          si (id=3)
+            RecibirMensaje(tot,R3)
+          sino
+            RecibirMensaje(tot,R4)  
+      si(tot>max)
+        max:=tot
+        maxid:=id
+    Informar('ganador', maxid)
+  fin  
+variables
+  R1: reco
+  R2: reco
+  R3: reco
+  R4: reco
+  fisca: fiscalizador
+comenzar
+  AsignarArea(R1, uno)
+  AsignarArea(R2,dos)
+  AsignarArea(R3, tres)
+  AsignarArea(R4, cuatro)
+  AsignarArea(fisca, fisca)
+  AsignarArea(R1,areaC)
+  AsignarArea(R2, areaC)
+  AsignarArea(R3, areaC)
+  AsignarArea(R4, areaC)
+  Iniciar(R1,2 ,1)
+  Iniciar(R2, 3,1)
+  Iniciar(R3, 4,1)
+  Iniciar(R4, 5,1)
+  Iniciar(fisca, 1,1)
+fin
