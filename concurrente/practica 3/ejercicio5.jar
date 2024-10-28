@@ -1,0 +1,100 @@
+{Realice un programa en el que 4 robots juegan una carrera por avenidas diferentes: 4, 6,
+8 y 10 respectivamente. Todos los robots inician en la calle 1.
+Para poder avanzar, cada robot debe juntar un papel de una fuente de papeles localizada
+en la esquina (11,11), colocarlo en la esquina actual de su avenida y avanzar un paso.
+Cuando la esquina fuente ya no tiene más papeles, o cuando se haya completado la
+avenida, deberán avisar al robot coordinador y este determinará el robot que llegó más
+lejos.}
+
+programa ejercicio5
+procesos
+  proceso recolectar ( ES termino:boolean; E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(11,11)
+    Pos(11,11)
+    si (HayPapelEnLaEsquina)
+      tomarPapel
+    sino
+      termino:=V
+    Pos(av,ca)
+    LiberarEsquina(11,11)
+    si (termino=F)
+      depositarPapel
+  fin
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    EnviarMensaje(4,R4)
+  fin
+areas
+  fisca: AreaP (1,1,1,1)
+  uno: AreaP(4,1,4,100)
+  dos: AreaP(6,1,6,100)
+  tres: AreaP(8,1,8,100)
+  cuatro: AreaP (10,1,10,100)
+  papelero: AreaPC(11,11,11,11)
+robots
+  robot jugador
+  variables
+    id,ca:numero
+    end:boolean
+  comenzar
+    end:=F
+    RecibirMensaje(id,coordi)
+    mientras (end=F)
+      recolectar(end,PosAv,PosCa)
+      si (PosCa=100)
+        end:=V
+      sino
+        mover
+    EnviarMensaje(id,coordi)
+    ca:=PosCa
+    EnviarMensaje(ca,coordi)
+  fin
+  robot coordi
+  variables
+    id,pos,max,maxid:numero
+  comenzar
+    enviarID
+    max:=-1
+    repetir 4
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(pos,R1)
+      sino
+        si(id=2)
+          RecibirMensaje(pos,R2)
+        sino
+          si (id=3)
+            RecibirMensaje(pos,R3)
+          sino
+            RecibirMensaje(pos,R4)
+      si (pos>max)
+        max:=pos
+        maxid:=id
+    Informar('ganador', maxid)
+  fin  
+variables
+  R1: jugador
+  R2: jugador
+  R3: jugador
+  R4: jugador
+  coordi: coordi
+comenzar
+  AsignarArea(R1, uno)
+  AsignarArea(R2,dos)
+  AsignarArea(R3, tres)
+  AsignarArea(R4, cuatro)
+  AsignarArea(coordi, fisca)
+  AsignarArea(R1, papelero)
+  AsignarArea(R2,papelero)
+  AsignarArea(R3, papelero)
+  AsignarArea(R4, papelero)
+  Iniciar(R1,4 ,1)
+  Iniciar(R2, 6,1)
+  Iniciar(R3, 8,1)
+  Iniciar(R4, 10,1)
+  Iniciar(coordi, 1,1)
+fin
