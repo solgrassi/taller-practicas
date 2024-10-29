@@ -1,0 +1,119 @@
+{Realice un programa en el que 4 robots mueven de a una todas las flores de la esquina
+(10,10) a la esquina (11,11). Para ello, cada robot que toma una flor de la esquina (10,10) la
+deposita en la esquina (11,11) y luego retorna a su esquina inicial. Cada robot que finaliza
+(o, sea, que detecta que la esquina (10,10) se ha vaciado) deberá avisar al robot
+coordinador que ha finalizado. Cuando todos los robots finalizaron, el robot coordinador
+deberá informar qué robot finalizó último y a continuación deberá recolectar todas las flores
+de la esquina (11,11).}
+
+programa ejercicio4
+procesos
+  proceso hacerEsquina (ES end:boolean)
+  variables
+    iniA,iniC: numero
+  comenzar
+    iniA:=PosAv
+    iniC:= PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    si (HayFlorEnLaEsquina)
+      tomarFlor
+      BloquearEsquina(11,11)
+      Pos(11,11)
+      LiberarEsquina(10,10)
+      depositarFlor
+      Pos(iniA,iniC)
+      LiberarEsquina(11,11)
+    sino 
+      end:=V
+      Pos(iniA,iniC)
+      LiberarEsquina(10,10)
+  fin
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    EnviarMensaje(4,R4)
+  fin
+  proceso quienRecolecta (E id:numero)
+  variables
+    uno,dos,tres,cuatro:boolean
+  comenzar
+    uno:=F 
+    dos:=F
+    tres:=F
+    cuatro:=F
+    si(id=1)
+      uno:=V
+    sino
+      si (id=2)
+        dos:=V
+      sino
+        si(id=3)
+          tres:=V
+        sino
+          cuatro:=V
+    EnviarMensaje(uno,R1)
+    EnviarMensaje(dos,R2)
+    EnviarMensaje(tres, R3)
+    EnviarMensaje(cuatro, R4)
+  fin     
+areas
+  com: AreaPC (10,10,11,11)
+  jefe: AreaP (1,1,1,1)
+  a1: AreaP(9,9,9,9)
+  a2: AreaP (9,10,9,10)
+  a3: AreaP (9,11,9,11)
+  a4: AreaP (9,12,9,12)
+robots
+  robot reco
+  variables
+    end,junto:boolean
+    id:numero
+  comenzar
+    RecibirMensaje(id,fisca)
+    end:=F
+    mientras (end=F)
+      hacerEsquina(end)
+    EnviarMensaje(id,fisca)
+    RecibirMensaje(junto,fisca)
+    si (junto)
+      Pos(11,11)
+      si (HayFlorEnLaEsquina)
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+  fin
+  robot coordi
+  variables
+    id:numero
+    end:boolean
+  comenzar
+    enviarID
+    repetir 4
+      RecibirMensaje(id,*)
+    Informar('ulitmo', id)
+    quienRecolecta(id) 
+  fin   
+variables
+  fisca: coordi
+  R1: reco
+  R2: reco
+  R3: reco
+  R4: reco
+comenzar
+  AsignarArea(fisca, jefe)
+  AsignarArea(R1,a1)
+  AsignarArea(R1,com)
+  AsignarArea(R2, a2)
+  AsignarArea(R2, com)
+  AsignarArea(R3,a3)
+  AsignarArea(R3, com)
+  AsignarArea(R4,a4)
+  AsignarArea(R4,com)
+  Iniciar(fisca, 1,1)
+  Iniciar(R1,9,9)
+  Iniciar(R2,9,10)
+  Iniciar(R3,9,11)
+  Iniciar(R4,9,12)
+fin
