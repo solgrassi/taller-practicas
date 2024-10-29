@@ -1,0 +1,231 @@
+{Tres robots deben recorrer el perímetro de su cuadrante, como se indica a
+continuación:
+● El robot 1 comienza la esquina (2,2) y debe realizar un cuadrante de 6x6 juntando
+todas las flores que encuentre
+● El robot 2 comienza en la esquina (5,5) y debe realizar un cuadrante de 10x10
+juntando todas las flores y los papeles que encuentre
+● El robot 3 comienza en la esquina (9,9) y debe realizar un cuadrante de 7x7 juntando
+todos los papeles que encuentre.
+Cada robot que finalice su cuadrante deberá avisar al robot fiscalizador. Al recibir el aviso, el
+robot fiscalizador indicará inmediatamente una calle a la que deberá dirigirse el robot
+recolector, considerando que el robot que finalizó primero irá a la calle 20, el segundo a la
+21 y el tercero a la 22.
+Cuando los robots recolectores reciben un número de calle, deberán posicionarse en la
+avenida 1 de dicha calle, y avanzar a lo largo de la calle depositando en cada esquina un
+papel, una flor o ambos, según lo que cada robot haya juntado. El recorrido finalizará al
+completar la calle o vaciarse las bolsas.}
+
+programa ejercicio6
+procesos
+  proceso juntarFlores
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+  fin
+  proceso juntarPapeles
+  comenzar
+    si (HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+  fin
+  proceso juntarTodo
+  comenzar
+    juntarFlores
+    juntarPapeles
+  fin
+  proceso hacerCuadrante
+  variables
+    iniA,iniC:numero
+  comenzar
+    iniA:=PosAv
+    iniC:=PosCa
+    repetir 5
+      juntarFlores
+      mover
+    derecha
+    repetir 2
+      juntarFlores
+      mover
+    juntarFlores 
+    BloquearEsquina(5,7)
+    mover
+    juntarFlores 
+    mover
+    LiberarEsquina(5,7)
+    juntarFlores 
+    mover
+    derecha
+    juntarFlores 
+    mover
+    BloquearEsquina(7,5)
+    mover
+    juntarFlores 
+    mover
+    LiberarEsquina(7,5)
+    repetir 2
+      juntarFlores 
+      mover
+    derecha
+    repetir 5
+      juntarFlores 
+      mover
+  fin
+  proceso hacerCuadrante2
+  comenzar
+    juntarTodo
+    mover
+    juntarTodo
+    BloquearEsquina(5,7)
+    mover
+    juntarTodo
+    mover
+    LiberarEsquina(5,7)
+    repetir 6
+      juntarTodo
+      mover
+    derecha
+    repetir 3
+      juntarTodo
+      mover
+    juntarTodo
+    BloquearEsquina(9,14)
+    mover
+    juntarTodo
+    mover
+    LiberarEsquina(9,14)
+    repetir 4
+      juntarTodo
+      mover
+    derecha
+    repetir 9
+      juntarTodo
+      mover
+    derecha
+    repetir 6
+      juntarTodo
+      mover
+    juntarTodo
+    BloquearEsquina(7 ,5)
+    mover
+    juntarTodo
+    mover
+    LiberarEsquina(7,5)
+    juntarTodo
+    mover
+  fin
+  proceso hacerCuadrante3
+  comenzar
+    repetir 4
+      juntarPapeles
+      mover
+    juntarPapeles
+    BloquearEsquina(9,14)
+    mover
+    juntarPapeles
+    mover
+    LiberarEsquina(9,14)
+    derecha
+    repetir 2
+      repetir 6
+        juntarPapeles
+        mover
+      derecha
+    juntarPapeles
+    BloquearEsquina(14,9)
+    mover
+    juntarPapeles
+    mover
+    LiberarEsquina(14,9)
+    repetir 4
+      juntarPapeles
+      mover
+  fin
+  proceso recorrer
+  comenzar
+    repetir 2
+      derecha
+    mientras (PosAv<100) y ((HayFlorEnLaBolsa)| (HayPapelEnLaBolsa))
+      si (HayFlorEnLaBolsa)
+        depositarFlor
+        mover
+      si (HayPapelEnLaBolsa) 
+        depositarPapel
+        mover
+  fin
+areas
+  jefe: AreaP (1,1,1,1)
+  area1: AreaPC (1,20,100,22)
+  area2: AreaPC (2,2,15,15)
+robots
+  robot reco1
+  variables
+    id:numero
+    ca:numero
+  comenzar
+    hacerCuadrante
+    id:= 1
+    EnviarMensaje(id,fisca)
+    RecibirMensaje(ca,fisca)
+    Pos(1,ca)
+    recorrer
+  fin
+  robot reco2
+  variables
+    id:numero
+    ca:numero
+  comenzar
+    hacerCuadrante2
+    id:=2
+    EnviarMensaje(id, fisca)
+    RecibirMensaje(ca,fisca)
+    Pos(1,ca)
+    recorrer
+  fin
+  robot reco3
+  variables
+    ca,id:numero
+  comenzar
+    hacerCuadrante3
+    id:=3
+    EnviarMensaje(id,fisca)
+    RecibirMensaje(ca,fisca)
+    Pos(1,ca)
+    recorrer
+  fin
+  robot coordi
+  variables
+    id:numero
+    ca:numero
+    end:boolean
+  comenzar
+    ca:=20
+    repetir 3
+      RecibirMensaje(id, *)
+      si (id=1)
+        EnviarMensaje(ca,R1)
+      sino
+        si (id=2)
+          EnviarMensaje(ca,R2)
+        sino
+          EnviarMensaje(ca,R3)
+      ca:= ca+1  
+  fin   
+variables
+  fisca: coordi
+  R1: reco1
+  R2: reco2
+  R3: reco3
+comenzar
+  AsignarArea(fisca, jefe)
+  AsignarArea(R1,area1)
+  AsignarArea(R1,area2)
+  AsignarArea(R2, area1)
+  AsignarArea(R2, area2)
+  AsignarArea(R3,area1)
+  AsignarArea(R3, area2)
+  Iniciar(fisca, 1,1)
+  Iniciar(R1,2,2)
+  Iniciar(R2,5,5)
+  Iniciar(R3,9,9)
+fin
