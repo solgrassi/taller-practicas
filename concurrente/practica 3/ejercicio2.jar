@@ -1,0 +1,162 @@
+{Realice un programa en el cual 2 robots corren una carrera. Durante el recorrido el robot 1 debe
+juntar todas las flores que encuentre en los vértices de cada escalón, y el robot 2 debe
+juntar todos los papeles que encuentre en los vértices de cada escalón. Al finalizar deben
+informar la cantidad de elementos recogidos.
+El robot 1 debe iniciar su recorrido en la esquina (1,1) y el robot 2 en la esquina (31,1).
+Al finalizar la carrera, un robot jefe (inicializado en la esquina (15,1) ) debe informar qué
+robot llegó primero a la esquina central de su recorrido.}
+
+programa ejericio2
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFlores (ES flo:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+  fin
+  proceso juntarPapeles (ES pap:numero)
+  comenzar
+    si(HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        pap:= pap+1
+  fin
+  proceso linea (E cant:numero)
+  comenzar
+    repetir cant
+      mover
+  fin
+  proceso escalonF (ES flo:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir 2
+        linea(cant)
+        derecha
+        juntarFlores(flo)
+      repetir 2
+        derecha
+      cant:= cant-1
+    mover
+    derecha
+    BloquearEsquina(16,16)
+    mover
+    EnviarMensaje(1,fisca)
+    juntarFlores(flo)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16)
+    juntarFlores(flo)
+  fin
+  proceso escalonF2 (ES flo:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    repetir 4
+      repetir 2
+        linea(cant)
+        juntarFlores(flo)
+        derecha
+      repetir 2
+        derecha
+      cant:=cant+1
+  fin
+  proceso escalonP (ES pap:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir 2
+        linea(cant)
+        juntarPapeles(pap)
+        izquierda
+      repetir 2
+        derecha
+      cant:=cant -1
+    mover
+    izquierda
+    BloquearEsquina(16,16)
+    mover
+    EnviarMensaje(2,fisca)
+    juntarPapeles(pap)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16)
+    juntarPapeles(pap)
+  fin
+  proceso escalonP2 (ES pap:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:= 2
+    repetir 4
+      repetir 2
+        linea(cant)
+        juntarPapeles(pap)
+        izquierda
+      repetir 2
+        derecha
+      cant:=cant +1
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot coordi
+  variables
+    id,gano,flo,pap:numero
+  comenzar
+    RecibirMensaje(id, *)
+    gano:=id
+    RecibirMensaje(id, *)
+    repetir 2
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(flo,r1)
+      sino
+        RecibirMensaje(pap,r2)
+    Informar('ganó', gano)
+  fin
+  robot competidor
+  variables
+    flo:numero
+  comenzar
+    flo:=0
+    escalonF(flo)
+    escalonF2(flo)
+    EnviarMensaje(1,fisca)
+    EnviarMensaje(flo,fisca)
+  fin
+  robot competidor2
+  variables
+    pap:numero
+  comenzar
+    pap:=0
+    escalonP(pap)
+    escalonP2(pap)
+    EnviarMensaje(2,fisca)
+    EnviarMensaje(pap,fisca)
+  fin
+variables
+  fisca: coordi
+  r1: competidor
+  r2: competidor2
+comenzar
+  AsignarArea(fisca, ciudad)
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  Iniciar(r1, 1,1)
+  Iniciar(r2,31,1)
+  Iniciar(fisca, 15,1 )
+fin
