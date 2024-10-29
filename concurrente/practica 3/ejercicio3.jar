@@ -24,10 +24,8 @@ procesos
   fin
   proceso hacerEsquina (E av:numero; E ca:numero; ES tot:numero; ES termino:boolean)
   variables
-    iniA,iniC,flo,pap:numero
+    iniA,iniC:numero
   comenzar
-    flo:=0
-    pap:=0
     iniA:=PosAv
     iniC:=PosCa
     BloquearEsquina(av,ca)
