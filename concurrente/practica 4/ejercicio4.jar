@@ -82,8 +82,6 @@ robots
         sino
           trabaja:=1
       Random(tare,1,4)
-      Informar(trabaja)
-      Informar(tare)
       Random(ca,2,100)
       Random(av,2,100)
       si (trabaja=1)
