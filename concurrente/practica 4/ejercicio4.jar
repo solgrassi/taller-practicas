@@ -89,16 +89,18 @@ robots
         EnviarMensaje(tare,T1)
         EnviarMensaje(ca,T1)
         EnviarMensaje(av,T1)
-        RecibirMensaje(completo,T1)
         si (tare=4)
           tra1:=F
+        sino
+          RecibirMensaje(completo,T1)
       sino
         EnviarMensaje(tare,T2)
         EnviarMensaje(ca,T2)
         EnviarMensaje(av,T2)
-        RecibirMensaje(completo,T2)
         si (tare=4)
           tra2:=F
+        sino
+          RecibirMensaje(completo,T2)
     si (tra1)
       EnviarMensaje(4, T1)
     si (tra2)
