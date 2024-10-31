@@ -64,12 +64,13 @@ robots
       tarea(tare)
       Pos(iniA,iniC)
       LiberarEsquina(av,ca)
+      EnviarMensaje(V,jefe)
       RecibirMensaje(tare,jefe)
   fin
   robot jefe
   variables
     tare, ca, av, trabaja:numero
-    tra1, tra2: boolean
+    tra1, tra2,completo: boolean
   comenzar
     tra1:=V
     tra2:=V
@@ -88,12 +89,14 @@ robots
         EnviarMensaje(tare,T1)
         EnviarMensaje(ca,T1)
         EnviarMensaje(av,T1)
+        RecibirMensaje(completo,T1)
         si (tare=4)
           tra1:=F
       sino
         EnviarMensaje(tare,T2)
         EnviarMensaje(ca,T2)
         EnviarMensaje(av,T2)
+        RecibirMensaje(completo,T2)
         si (tare=4)
           tra2:=F
     si (tra1)
