@@ -42,21 +42,29 @@ robots
     cant: numero
   comenzar
     RecibirMensaje(id, coordi)
-    mientras (PosCa<100)
+    end:=F
+    mientras ((PosCa<100) & (end=F))
       Random(cant,1,5)
       hacerEtapa(cant)
+      end:= (PosCa<100)
       si (id=1)
-        EnviarMensaje(V, R2)
-        EnviarMensaje(V, R3)
+        EnviarMensaje(end, R2)
+        EnviarMensaje(end, R3)
       sino
         si (id=2)
-          EnviarMensaje(V,R1)
-          EnviarMensaje(V,R3)
+          EnviarMensaje(end,R1)
+          EnviarMensaje(end,R3)
         sino
-          EnviarMensaje(V,R1)
-          EnviarMensaje(V,R2)
-      repetir 2
+          EnviarMensaje(end,R1)
+          EnviarMensaje(end,R2)
+      RecibirMensaje(end,*)
+      si (end = V)
         RecibirMensaje(end,*)
+        end:= V
+      sino
+        RecibirMensaje(end,*)
+        si (end=V)
+          end:=V
   fin
   robot coordinador
   comenzar
