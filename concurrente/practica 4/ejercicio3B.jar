@@ -18,7 +18,7 @@ procesos
   comenzar
     pap:=0
     end:=F
-    mientras (end=F)
+    mientras ((end=F) & (PosCa<100) )
       si (HayPapelEnLaEsquina)
         mientras(HayPapelEnLaEsquina) & (pap<cant)
           tomarPapel
@@ -26,8 +26,7 @@ procesos
         si (pap=cant) 
           end:=V
       sino
-        si (PosCa<100)
-          mover  
+        mover  
   fin
 areas
   area1: AreaP (1,1,1,100)
@@ -46,7 +45,7 @@ robots
     mientras ((PosCa<100) & (end=F))
       Random(cant,1,5)
       hacerEtapa(cant)
-      end:= (PosCa<100)
+      end:= ~(PosCa<100)
       si (id=1)
         EnviarMensaje(end, R2)
         EnviarMensaje(end, R3)
@@ -63,8 +62,6 @@ robots
         end:= V
       sino
         RecibirMensaje(end,*)
-        si (end=V)
-          end:=V
   fin
   robot coordinador
   comenzar
