@@ -1,0 +1,101 @@
+{Existen dos robots productores que recorren las avenidas 5 y 10 respectivamente, juntando
+todos los papeles de su avenida. A lo largo del recorrido, cada vez que juntan 5 papeles, los
+depositan en la esquina (50,50).
+Además existen dos robots consumidores que intentan tomar una cantidad aleatoria de
+papeles (entre 2 y 5) de la esquina (50,50) para depositarla en su esquina de origen. Si la
+esquina (50,50) no posee la cantidad de papeles requerida, vuelven a su esquina de origen
+sin tomar ningún papel. Si luego de 8 intentos seguidos un consumidor detecta que la
+esquina (50,50) no tiene papeles suficientes para juntar, entonces asumirá que los
+productores ya han completado su trabajo y por lo tanto terminará su tarea también.
+Los consumidores inician en las esquinas (11,1) y (12,1) respectivamente.
+}
+
+programa ejercicio2
+procesos
+  proceso juntarPapelesAvenida
+  variables
+    pap, iniA,iniC:numero
+    flag:boolean
+  comenzar
+    pap:=0
+    iniA:=PosAv
+    flag:=F
+    mientras (flag=F)
+      si (HayPapelEnLaEsquina)
+        mientras(HayPapelEnLaEsquina) & (pap<5)
+          tomarPapel
+          pap:=pap+1
+        si (pap=5)
+          iniC:=PosCa
+          BloquearEsquina(50,50)
+          Pos(50,50)
+          repetir 5
+            depositarPapel
+          Pos(iniA,iniC)
+          LiberarEsquina(50,50)
+          pap:=0
+          si (~HayPapelEnLaEsquina) & (PosCa<100) 
+            mover
+      sino
+        si (PosCa=100)
+          flag:=V
+        sino
+          mover
+  fin
+areas
+  produ1: AreaP (5,1,5,100)
+  produ2: AreaP (10,1,10,100)
+  deposito: AreaC (50,50,50,50)
+  esquiC1: AreaP(11,1,11,1)
+  esquiC2: AreaP (12,1,12,1)
+robots
+  robot productor 
+  comenzar
+    juntarPapelesAvenida
+  fin
+  robot consumidor
+  variables
+    cant, intentos, iniA,iniC,aux:numero
+  comenzar
+    intentos:=8
+    iniA:=PosAv
+    iniC:=PosCa
+    mientras (intentos>0)
+      Random(cant,2,5)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      mientras (HayFlorEnLaEsquina) & (aux<cant)
+        tomarFlor
+        aux:=aux +1
+      si (aux<>cant)
+        repetir aux 
+          depositarPapel
+      Pos(iniA,iniC)
+      LiberarEsquina(50,50)
+      si (aux<>cant)
+        intentos:= intentos -1
+      sino
+        intentos:=8
+        repetir cant
+          depositarPapel
+      aux:=0
+  fin
+variables
+  p1: productor
+  p2: productor
+  c1: consumidor
+  c2: consumidor
+comenzar
+  AsignarArea(p1, produ1)
+  AsignarArea(p2,produ2)
+  AsignarArea(c1,esquiC1)
+  AsignarArea(c2,esquiC2)
+  AsignarArea(p1,deposito)
+  AsignarArea(p2,deposito)
+  AsignarArea(c1,deposito)
+  AsignarArea(c2,deposito)
+  Iniciar(p1,5,1)
+  Iniciar(p2,10,1)
+  Iniciar(c1,11,1)
+  Iniciar(c2,12,1)
+fin
