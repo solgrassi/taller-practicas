@@ -20,6 +20,9 @@ procesos
     pap:=0
     iniA:=PosAv
     flag:=F
+    pap:=0
+    iniA:=PosAv
+    flag:=F
     mientras (flag=F)
       si (HayPapelEnLaEsquina)
         mientras(HayPapelEnLaEsquina) & (pap<5)
@@ -59,18 +62,17 @@ robots
   comenzar
     intentos:=8
     iniA:=PosAv
-    iniC:=PosCa
     mientras (intentos>0)
       Random(cant,2,5)
       BloquearEsquina(50,50)
       Pos(50,50)
-      mientras (HayFlorEnLaEsquina) & (aux<cant)
-        tomarFlor
+      mientras ( (HayPapelEnLaEsquina) & (aux<cant))
+        tomarPapel
         aux:=aux +1
       si (aux<>cant)
         repetir aux 
           depositarPapel
-      Pos(iniA,iniC)
+      Pos(iniA,1)
       LiberarEsquina(50,50)
       si (aux<>cant)
         intentos:= intentos -1
