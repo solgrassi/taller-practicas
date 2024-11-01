@@ -18,7 +18,7 @@ procesos
   comenzar
     pap:=0
     end:=F
-    mientras ((end=F) & (PosCa<100) )
+    mientras (~(end) & (PosCa<100) )
       si (HayPapelEnLaEsquina)
         mientras(HayPapelEnLaEsquina) & (pap<cant)
           tomarPapel
@@ -36,32 +36,41 @@ areas
 robots
   robot barrera
   variables
-    end: boolean
+    end,end2,end3: boolean
     id: numero
     cant: numero
+    act,act2:boolean
   comenzar
     RecibirMensaje(id, coordi)
     end:=F
-    mientras ((PosCa<100) & (end=F))
+    end2:=F
+    end3:=F
+    mientras  (~(end))
       Random(cant,1,5)
       hacerEtapa(cant)
       end:= ~(PosCa<100)
       si (id=1)
-        EnviarMensaje(end, R2)
-        EnviarMensaje(end, R3)
+        si ~(end2)
+          EnviarMensaje(end, R2)
+          RecibirMensaje(end2, R2)
+        si ~(end3)
+          EnviarMensaje(end, R3)
+          RecibirMensaje(end3,R3)
       sino
         si (id=2)
-          EnviarMensaje(end,R1)
-          EnviarMensaje(end,R3)
+          si ~(end2)
+            EnviarMensaje(end,R1)
+            RecibirMensaje(end2, R1)
+          si ~(end3)
+            EnviarMensaje(end,R3)
+            RecibirMensaje(end3,R3)
         sino
-          EnviarMensaje(end,R1)
-          EnviarMensaje(end,R2)
-      RecibirMensaje(end,*)
-      si (end = V)
-        RecibirMensaje(end,*)
-        end:= V
-      sino
-        RecibirMensaje(end,*)
+          si ~(end2)
+            EnviarMensaje(end,R1)
+            RecibirMensaje(end2, R1)
+          si ~(end3)
+            EnviarMensaje(end,R2)
+            RecibirMensaje(end3,R2)
   fin
   robot coordinador
   comenzar
