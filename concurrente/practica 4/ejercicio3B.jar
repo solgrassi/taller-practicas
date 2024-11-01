@@ -18,7 +18,7 @@ procesos
   comenzar
     pap:=0
     end:=F
-    mientras (~(end) & (PosCa<100) )
+    mientras ((~(end)) & (PosCa<100) )
       si (HayPapelEnLaEsquina)
         mientras(HayPapelEnLaEsquina) & (pap<cant)
           tomarPapel
@@ -26,7 +26,7 @@ procesos
         si (pap=cant) 
           end:=V
       sino
-        mover  
+        mover
   fin
 areas
   area1: AreaP (1,1,1,100)
@@ -38,8 +38,8 @@ robots
   variables
     end,end2,end3: boolean
     id: numero
-    cant: numero
-    act,act2:boolean
+    cant,pap: numero
+    act,act2, juntar:boolean
   comenzar
     RecibirMensaje(id, coordi)
     end:=F
@@ -71,6 +71,17 @@ robots
           si ~(end3)
             EnviarMensaje(end,R2)
             RecibirMensaje(end3,R2)
+    juntar:=V
+    mientras (juntar)
+      Random(cant,1,5)
+      si (HayPapelEnLaEsquina)
+        pap:=0
+        mientras ((HayPapelEnLaEsquina) & (pap<cant))
+          tomarPapel
+          pap:=pap+1
+        Informar('etapa',0)
+      sino
+        juntar:=F  
   fin
   robot coordinador
   comenzar
@@ -88,6 +99,11 @@ comenzar
   AsignarArea(R2, area2)
   AsignarArea(R3,area3) 
   AsignarArea(coordi, areaco)
+  Iniciar(R1, 1,1)
+  Iniciar(R2,2,1)
+  Iniciar(R3,3,1)
+  Iniciar(coordi, 100,100)
+fin
   Iniciar(R1, 1,1)
   Iniciar(R2,2,1)
   Iniciar(R3,3,1)
