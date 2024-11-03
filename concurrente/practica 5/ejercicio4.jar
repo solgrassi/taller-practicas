@@ -1,0 +1,111 @@
+{Tres robots floreros tienen 8 intentos en total para juntar todas las flores dentro del
+cuadrante comprendido entre las esquinas (40,40) y (60,60). Para ello, en cada intento un
+robot fiscalizador indicará a un robot aleatorio la esquina a la que debe dirigirse. El
+fiscalizador calculará esta esquina de manera aleatoria. Al completarse los 8 intentos, los
+robots floreros deberán depositar todas las flores juntadas en la esquina (10,10), y el robot
+fiscalizador deberá informar la cantidad total de flores juntadas por los robots.
+Los robots floreros inician en las esquinas (1,1), (2,1) y (3,1) respectivamente, y el
+fiscalizador en la (4,1)}
+
+programa ejercicio4
+procesos
+  proceso juntarFlores (ES flo:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+  fin
+  proceso juntarEnEsquina (ES flo:numero; E av:numero; E ca:numero)
+  variables
+    iniA,iniC:numero
+  comenzar
+    iniA:=PosAv
+    iniC:=PosCa
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    juntarFlores(flo)
+    Pos(iniA,iniC)
+    LiberarEsquina(av,ca)
+  fin
+areas
+  area1: AreaP (1,1,1,1)
+  area2: AreaP (2,1,2,1)
+  area3: AreaP (3,1,3,1)
+  cuadrante: AreaPC (40,40,60,60)
+  areaC: AreaPC (10,10,10,10)
+  areaF: AreaP (4,1,4,1)
+robots
+  robot florero
+  variables
+    id,flo,ca,av:numero
+    sigue:boolean
+  comenzar
+    flo:=0
+    RecibirMensaje(sigue,fisca)
+    mientras (sigue)
+      RecibirMensaje(av,fisca)
+      RecibirMensaje(ca,fisca)
+      juntarEnEsquina(flo,av,ca)
+      RecibirMensaje(sigue,fisca)   
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    repetir flo
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(10,10)
+    EnviarMensaje(flo,fisca)
+  fin
+  robot fiscalizador
+  variables
+    tflo,av,ca,rob,cant:numero
+  comenzar
+    repetir 8
+      Random(rob,1,3)
+      Random(av,40,60)
+      Random(ca,40,60)
+      si (rob=1)
+        EnviarMensaje(V,R1)
+        EnviarMensaje(av,R1)
+        EnviarMensaje(ca,R1)
+      sino
+        si (rob=2)
+          EnviarMensaje(V,R2)
+          EnviarMensaje(av,R2)
+          EnviarMensaje(ca,R2)
+        sino
+          EnviarMensaje(V,R3)
+          EnviarMensaje(av,R3)
+          EnviarMensaje(ca,R3)
+    EnviarMensaje(F,R1)
+    EnviarMensaje(F,R2)
+    EnviarMensaje(F,R3)
+    tflo:=0
+    repetir 3
+      RecibirMensaje(cant,*)
+      tflo:= tflo + cant
+    Informar(tflo)
+  fin
+variables
+  fisca: fiscalizador
+  R1: florero
+  R2: florero
+  R3: florero
+comenzar
+  AsignarArea(fisca, areaF)
+  AsignarArea(R1,area1)
+  AsignarArea(R1,cuadrante)
+  AsignarArea(R1,areaC)
+  AsignarArea(R2,area2)
+  AsignarArea(R2,cuadrante)
+  AsignarArea(R2,areaC)
+  AsignarArea(R3,area3)
+  AsignarArea(R3,cuadrante)
+  AsignarArea(R3,areaC)
+  Iniciar(R1, 1,1)
+  Iniciar(R2,2,1)
+  Iniciar(R3,3,1)
+  Iniciar(fisca,4,1)
+fin
