@@ -1,0 +1,132 @@
+{Se organizó una competencia entre el equipo rojo y el equipo azul. Cada equipo consta
+de dos robots, y debe realizar una tarea:
+- Los robots R1 y R2 del equipo rojo debe juntar todas las flores de las avenidas 2 y 3
+respectivamente
+- Los robots A1 y A2 del equipo azul debe juntar todos los papeles de las calles 98 y
+99 respectivamente
+Al finalizar la competencia, un robot fiscalizador deberá informar el equipo que juntó más
+objetos.
+}
+
+programa ejercicio1
+procesos
+  proceso juntarFlores(ES flo: numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+  fin
+  proceso juntarPapeles(ES pap: numero)
+  comenzar
+    si (HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        pap:= pap +1
+  fin
+areas
+  arear1: AreaP (2,1,2,97)
+  arear1b: AreaP (2,100,2,100)
+  arear2: AreaP (3,1,3,97)
+  arear2b: AreaP (3,100,3,100)
+  areaC: AreaPC (2,98,3,99)
+  areaa1: AreaP (1,98,1,98)
+  areaa1b: AreaP (4,98,100,98)
+  areaa2: AreaP (1,99,1,99)
+  areaa2b: AreaP (4,99,100,99)
+  areaf: AreaP (1,1,1,1)
+robots
+  robot rojo
+  variables
+    flo:numero
+    av:numero
+  comenzar
+    flo:=0
+    repetir 96
+      juntarFlores(flo)
+      mover
+    juntarFlores(flo)
+    av:= PosAv
+    BloquearEsquina(av,98)
+    mover
+    juntarFlores(flo)
+    BloquearEsquina(av,99)
+    mover
+    LiberarEsquina(av,98)
+    juntarFlores(flo)
+    mover
+    LiberarEsquina(av,99)
+    juntarFlores(flo)
+    EnviarMensaje(1, fisca)
+    EnviarMensaje(flo, fisca)
+  fin
+  robot azul
+  variables
+    pap: numero
+    ca:numero
+  comenzar
+    pap:=0
+    derecha
+    juntarPapeles(pap)
+    ca:=PosCa
+    BloquearEsquina(2,ca)
+    mover
+    juntarPapeles(pap)
+    BloquearEsquina(3,ca)
+    mover
+    LiberarEsquina(2,ca)
+    juntarPapeles(pap)
+    mover
+    LiberarEsquina(3,ca)
+    repetir 95
+      juntarPapeles(pap)
+      mover
+    juntarPapeles(pap)
+    EnviarMensaje(0, fisca)
+    EnviarMensaje(pap,fisca)
+  fin
+  robot fiscalizador
+  variables
+    tpap, tflo,id,cant: numero
+  comenzar   
+    tpap:=0
+    tflo:=0   
+    repetir 4
+      RecibirMensaje(id, *)
+      si (id=0)
+        RecibirMensaje(cant,*)
+        tpap:= tpap + cant
+      sino
+        RecibirMensaje(cant, *)
+        tflo:= tflo + cant
+    si (tpap> tflo)
+      Informar('azul',tpap)
+    sino
+      Informar('rojo', tflo)
+  fin
+variables
+  fisca: fiscalizador
+  R1: rojo
+  R2: rojo
+  A1: azul
+  A2: azul
+comenzar
+  AsignarArea(fisca, areaf)
+  AsignarArea (R1,arear1)
+  AsignarArea (R1,arear1b)
+  AsignarArea (R1,areaC)
+  AsignarArea(R2, arear2)
+  AsignarArea(R2, arear2b)
+  AsignarArea(R2, areaC)
+  AsignarArea(A1, areaa1)
+  AsignarArea(A1, areaa1b)
+  AsignarArea(A1, areaC)
+  AsignarArea(A2, areaa2)
+  AsignarArea(A2, areaa2b)
+  AsignarArea(A2, areaC)
+  Iniciar(fisca, 1,1)
+  Iniciar(R1,2,1)
+  Iniciar(R2,3,1)
+  Iniciar(A1,1,98)
+  Iniciar(A2,1,99)
+fin
