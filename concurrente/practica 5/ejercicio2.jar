@@ -1,0 +1,110 @@
+{Tres robots recolectores deben avanzar por su calle vaciando las esquinas. El avance
+debe realizarse en conjunto en etapas, siguiendo el modelo de sincronización barrera, en el
+cual los robots deben esperar que todos terminen su tarea antes de avanzar a la siguiente
+etapa. Cada etapa consiste en recorrer 10 esquinas y luego depositar todas las flores
+recolectadas en la esquina (50,50). Una vez que los robots recolectores completaron toda
+su calle, un robot fiscalizador deberá juntar todas las flores de la esquina (50,50) e informar
+la cantidad total de flores juntadas. Los robots recolectores inician en las esquinas (1,1),
+(1,2) y (1,3) respectivamente. El robot fiscalizador inicia en la esquina (1,4).
+}
+
+programa ejercicio2
+procesos
+  proceso vaciarEsquina (ES flo: numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+    si (HayPapelEnLaEsquina)
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+  fin
+  proceso hacerEtapa (E cant:numero)
+  variables
+    flo, ca,av: numero
+  comenzar
+    flo:= 0
+    repetir cant
+      vaciarEsquina(flo)
+      mover
+    vaciarEsquina(flo)
+    av:=PosAv
+    ca:=PosCa
+    si (flo<> 0)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      repetir flo
+        depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+  fin
+areas
+  areaC: AreaC (50,50,50,50)
+  area1: AreaP (1,1,100,1)
+  area2: AreaP (1,2,100,2)
+  area3: AreaP (1,3,100,3)
+  areaF: AreaP (1,4,1,4)
+robots
+  robot reco
+  variables
+    id: numero
+    end: boolean
+  comenzar
+    derecha
+    RecibirMensaje(id,fisca)
+    repetir 9
+      hacerEtapa(10)
+      si (id=1)
+        EnviarMensaje(V, R2)
+        EnviarMensaje(V, R3)
+        repetir 2
+          RecibirMensaje(end,*)
+      sino 
+        si (id=2)
+          EnviarMensaje(V, R1)
+          EnviarMensaje(V, R3)
+          repetir 2
+            RecibirMensaje(end, *)
+        sino
+          EnviarMensaje(V, R1)
+          EnviarMensaje(V, R2)
+          repetir 2
+            RecibirMensaje(end,*)
+    hacerEtapa(9)
+    EnviarMensaje(V,fisca)
+  fin
+  robot fiscalizador
+  variables
+    end: boolean
+    flo:numero
+  comenzar   
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    repetir 3
+      RecibirMensaje(end,*)
+    Pos(50,50)
+    flo:=0
+    vaciarEsquina(flo)
+    Informar ('cant t' , flo)
+  fin
+variables
+  fisca: fiscalizador
+  R1: reco
+  R2: reco
+  R3: reco
+comenzar
+  AsignarArea(fisca, areaF)
+  AsignarArea(fisca,areaC)
+  AsignarArea (R1,area1)
+  AsignarArea (R1,areaC)
+  AsignarArea(R2, area2)
+  AsignarArea(R2, areaC)
+  AsignarArea(R3, area3)
+  AsignarArea(R3, areaC)
+  Iniciar(fisca, 1,4)
+  Iniciar(R1,1,1)
+  Iniciar(R2,1,2)
+  Iniciar(R3,1,3)
+fin
