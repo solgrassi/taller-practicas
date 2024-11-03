@@ -1,0 +1,107 @@
+{Existe un robot servidor que tiene su bolsa con papeles. Tres robots clientes tienen 4
+intentos cada uno para solicitar al servidor que les entregue papeles. Cada vez que el
+servidor recibe un pedido de papeles de un cliente, se ubicará en la esquina (100,1),
+colocará allí una cantidad aleatoria de papeles (entre 1 y 5) y avisará al cliente
+correspondiente la cantidad de papeles que le depositó.
+Una vez que un cliente recibe un aviso, deberá recolectar uno a uno los papeles que le
+corresponden y depositarlos en su esquina inicial.
+El programa finalizará cuando todos los clientes hayan completado todos sus intentos.
+Asuma que el servidor tiene los papeles suficientes para cubrir todas las solicitudes.
+Los robots clientes inician en las esquinas (10,1), (11,1) y (12,1), y el robot servidor inicia en
+la esquina (13,1)}
+
+programa ejercicio5
+procesos
+  proceso juntarPapel
+  variables
+    iniA,iniC:numero
+  comenzar
+    iniA:=PosAv
+    iniC:=PosCa
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    tomarPapel
+    Pos(iniA,iniC)
+    LiberarEsquina(100,1)
+  fin
+  proceso ponerPapelEsquina (E cant:numero)
+  comenzar
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    repetir cant
+      depositarPapel
+    Pos(13,1)
+    LiberarEsquina(100,1)
+  fin
+areas
+  area1: AreaP (10,1,10,1)
+  area2: AreaP (11,1,11,1)
+  area3: AreaP (12,1,12,1)
+  esquina: AreaC (100,1,100,1)
+  areaSer: AreaP (13,1,13,1)
+robots
+  robot servidor
+  variables
+    cant,id:numero
+    aux,aux2,aux3: boolean
+  comenzar
+    aux:=V
+    aux2:=V
+    aux3:=V
+    EnviarMensaje(1,C1)
+    EnviarMensaje(2,C2)
+    EnviarMensaje(3,C3)
+    mientras ((aux)|(aux2)|(aux3))
+      Random(cant,1,5)
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(aux,C1)
+        si (aux)
+          ponerPapelEsquina(cant)
+          EnviarMensaje(cant,C1)
+      sino 
+        si (id=2)
+          RecibirMensaje(aux2,C2)
+          si (aux2)
+            ponerPapelEsquina(cant)
+            EnviarMensaje(cant,C2)
+        sino
+          RecibirMensaje(aux3,C3)
+          si (aux3)
+            EnviarMensaje(cant,C3)
+            ponerPapelEsquina(cant)   
+  fin
+  robot cliente
+  variables
+    cant,id:numero
+  comenzar
+    RecibirMensaje(id,servi)
+    repetir 4
+      EnviarMensaje(id,servi)
+      EnviarMensaje(V,servi)
+      RecibirMensaje(cant,servi)
+      repetir cant
+        juntarPapel
+        depositarPapel
+    EnviarMensaje(id,servi)
+    EnviarMensaje(F,servi)
+  fin
+variables
+  servi: servidor
+  C1: cliente
+  C2: cliente
+  C3: cliente
+comenzar
+  AsignarArea(servi,areaSer)
+  AsignarArea(servi,esquina)
+  AsignarArea(C1,area1)
+  AsignarArea(C1,esquina)
+  AsignarArea(C2,area2)
+  AsignarArea(C2,esquina)
+  AsignarArea(C3,area3)
+  AsignarArea(C3,esquina)
+  Iniciar(servi,13,1)
+  Iniciar(C1,10,1)
+  Iniciar(C2,11,1)
+  Iniciar(C3,12,1)
+fin
