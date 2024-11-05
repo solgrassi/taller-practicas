@@ -31,13 +31,12 @@ procesos
     vaciarEsquina(flo)
     av:=PosAv
     ca:=PosCa
-    si (flo<> 0)
-      BloquearEsquina(50,50)
-      Pos(50,50)
-      repetir flo
-        depositarFlor
-      Pos(av,ca)
-      LiberarEsquina(50,50)
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir flo
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(50,50)
   fin
 areas
   areaC: AreaC (50,50,50,50)
