@@ -37,7 +37,7 @@ procesos
     Pos(av,ca)
     LiberarEsquina(10,10)
   fin  
-  proceso vaciarBolsa (ES flo:numero)
+  proceso recolectarF (ES flo:numero)
   comenzar
     BloquearEsquina(10,10)
     Pos(10,10)
@@ -83,11 +83,11 @@ robots
       si (id=1)
         RecibirMensaje(aux, R1)
         si (aux)
-          vaciarBolsa(flo)
+          recolectarF(flo)
       sino
         RecibirMensaje(aux2, R2)
         si (aux2)
-          vaciarBolsa(flo)
+          recolectarF(flo)
     Informar('cant', flo) 
   fin
 variables
