@@ -1,0 +1,77 @@
+
+programa ejemplo
+procesos
+  proceso hacerEsquina
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    si (HayFlorEnLaEsquina)
+      tomarFlor
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  areaF: AreaP (1,1,1,1)
+  area1: AreaP (2,2,2,2)
+  area2: AreaP (3,3,3,3)
+  area3: AreaP (4,4,4,4)
+  area4: AreaP (5,5,5,5)
+  esquina: AreaPC (50,50,50,50)
+robots
+  robot limpia
+  variables
+    sigue:boolean
+  comenzar
+    RecibirMensaje(sigue,fisca)
+    mientras (sigue)
+      hacerEsquina
+      RecibirMensaje(sigue,fisca)
+  fin
+  robot fiscalizador
+  variables
+    rob:numero
+  comenzar
+    repetir 5
+      Random(rob,1,4)
+      Informar(rob)
+      si (rob=1)
+        EnviarMensaje(V,L1)
+      sino
+        si (rob=2)
+          EnviarMensaje(V,L2)
+        sino
+          si (rob=3)
+            EnviarMensaje(V,L3)
+          sino
+            EnviarMensaje(V,L4)
+    EnviarMensaje(F,L1)
+    EnviarMensaje(F,L2)
+    EnviarMensaje(F,L3)
+    EnviarMensaje(F,L4)
+  fin
+variables
+  L1: limpia
+  L2: limpia
+  L3: limpia
+  L4: limpia
+  fisca: fiscalizador
+comenzar
+  AsignarArea(fisca, areaF)
+  AsignarArea(L1,area1)
+  AsignarArea(L1,esquina)
+  AsignarArea(L2,area2)
+  AsignarArea(L2,esquina)
+  AsignarArea(L3,area3)
+  AsignarArea(L3,esquina)
+  AsignarArea(L4,area4)
+  AsignarArea(L4,esquina)
+  Iniciar(fisca, 1,1)
+  Iniciar(L1,2,2)
+  Iniciar(L2,3,3)
+  Iniciar(L3,4,4)
+  Iniciar(L4,5,5)
+fin

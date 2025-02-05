@@ -1,0 +1,136 @@
+
+programa ejemplo
+procesos
+  proceso juntarFlores (ES flo:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+  fin
+  proceso depositarDeAUna (E flo:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    repetir flo
+      BloquearEsquina (25,25)
+      Pos(25,25)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(25,25)
+  fin
+  proceso hacerRectangulo (E alto:numero; E ancho:numero; ES totF:numero)
+  variables
+    flo,av,ca:numero
+  comenzar
+    repetir 2
+      flo:=0
+      repetir alto
+        juntarFlores(flo)
+        mover
+      totF:= totF + flo
+      depositarDeAUna(flo)
+      flo:=0
+      derecha
+      repetir ancho
+        juntarFlores(flo)
+        mover
+      totF:= totF + flo
+      depositarDeAUna(flo)
+      derecha
+  fin    
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+  fin   
+  proceso enviarPerimetros
+  variables
+    alto,ancho:numero
+  comenzar
+    Random(alto,1,10)
+    Random(ancho,1,5)
+    EnviarMensaje(alto,R1)
+    EnviarMensaje(ancho,R1)
+    Random(alto,1,10)
+    Random(ancho,1,5)
+    EnviarMensaje(alto,R2)
+    EnviarMensaje(ancho,R2)
+    Random(alto,1,10)
+    Random(ancho,1,5)
+    EnviarMensaje(alto,R3)
+    EnviarMensaje(ancho,R3)
+  fin
+  proceso calcularMaximo (E tot1:numero; E tot2:numero; E tot3:numero; ES ganador: numero)
+  variables
+    max:numero
+  comenzar
+    max:=0
+    si (tot1>max)
+      max:=tot1
+      ganador:=1
+    si (tot2>max)
+      max:=tot2
+      ganador:=2
+    si (tot3>max)
+      ganador:=3
+  fin     
+areas
+  area1: AreaP (1,1,6,11)
+  area2: AreaP (7,1,12,11)
+  area3:AreaP (13,1,18,11)
+  deposito: AreaPC (25,25,25,25)
+  areaCor: AreaP (24,24,24,24)
+robots
+  robot reco
+  variables
+    id,alto,ancho,totF:numero
+  comenzar
+    totF:=0
+    RecibirMensaje(id,coordi)
+    RecibirMensaje(alto,coordi)
+    RecibirMensaje(ancho,coordi)
+    hacerRectangulo(alto,ancho,totF)
+    EnviarMensaje(id,coordi)
+    EnviarMensaje(totF,coordi)
+  fin
+  robot coordinador
+  variables
+    tot1,tot2,tot3,id,ganador:numero
+  comenzar
+    enviarID
+    enviarPerimetros
+    repetir 3
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(tot1,R1)
+      sino
+        si(id=2)
+          RecibirMensaje(tot2,R2)
+        sino
+          RecibirMensaje(tot3,R3)
+    calcularMaximo(tot1,tot2,tot3,ganador)  
+    Informar('gano', ganador)
+  fin
+variables
+  coordi: coordinador
+  R1: reco
+  R2: reco
+  R3: reco
+comenzar
+  AsignarArea(coordi, areaCor)
+  AsignarArea(R1,area1)
+  AsignarArea(R1,deposito)
+  AsignarArea(R2,area2)
+  AsignarArea(R2,deposito)
+  AsignarArea(R3,area3)
+  AsignarArea(R3,deposito)
+  Iniciar(R1, 1,1)
+  Iniciar(R2,7,1)
+  Iniciar(R3,13,1)
+  Iniciar(coordi,24,24)
+fin
+{ultima version}

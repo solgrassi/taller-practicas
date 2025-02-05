@@ -1,0 +1,118 @@
+programa ejemplo
+procesos
+  proceso juntarFlores (ES flo:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+  fin
+  proceso juntarPapeles (ES pap:numero)
+  comenzar
+    si (HayPapelEnLaEsquina)
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        pap:= pap +1
+  fin
+  proceso hacerIda (E id:numero)
+  variables
+    flo:numero
+  comenzar
+    flo:=0
+    repetir 4
+      juntarFlores(flo)
+      mover
+    juntarFlores(flo)
+    BloquearEsquina(6,6)
+    Pos(6,6)
+    juntarFlores(flo)
+    si (id=1)
+      Pos(7,7)
+    sino
+      Pos(7,5)
+    LiberarEsquina(6,6) 
+    repetir  4
+      juntarFlores(flo)
+      mover
+    juntarFlores(flo)
+    EnviarMensaje(id,fisca)
+    EnviarMensaje(flo,fisca)
+  fin
+  proceso hacerVuelta(E id:numero)
+  variables
+    pap:numero
+  comenzar
+    pap:=0
+    repetir 2
+      derecha
+    repetir 4
+      juntarPapeles(pap)
+      mover
+    juntarPapeles(pap)
+    BloquearEsquina(6,6)
+    Pos(6,6)
+    juntarPapeles(pap)
+    si (id=1)
+      Pos(5,5)
+    sino
+      Pos(5,7)
+    LiberarEsquina(6,6)
+    repetir 4
+      juntarPapeles(pap)
+      mover
+    juntarPapeles(pap)
+    EnviarMensaje(id,fisca)
+    EnviarMensaje(pap,fisca)
+  fin  
+areas
+  area1: AreaP(1,5,5,5)
+  area1b: AreaP (7,7,11,7)
+  area2: AreaP (1,7,5,7)
+  area2b: AreaP(7,5,11,5)
+  esquina: AreaPC (6,6,6,6)
+  areaF: AreaP (1,6,1,6)
+robots
+  robot corredor
+  variables
+    id:numero
+  comenzar
+    derecha
+    RecibirMensaje(id,fisca)
+    hacerIda(id)
+    hacerVuelta(id)
+  fin
+  robot fiscalizador
+  variables
+    id,cant1,cant2:numero
+  comenzar
+    EnviarMensaje(1,C1)
+    EnviarMensaje(2,C2)
+    repetir 2
+      repetir 2
+        RecibirMensaje(id,*)
+        si (id=1)
+          RecibirMensaje(cant1,C1)
+        sino
+          RecibirMensaje(cant2,C2)
+      si (cant1>cant2)
+        Informar('C1', cant1)
+      sino
+        Informar('C2', cant2)   
+  fin
+variables
+  C1: corredor
+  C2: corredor
+  fisca:fiscalizador
+comenzar
+  AsignarArea(fisca,areaF)
+  AsignarArea(C1,area1)
+  AsignarArea(C1,area1b)
+  AsignarArea(C1,esquina)
+  AsignarArea(C2,area2)
+  AsignarArea(C2,area2b)
+  AsignarArea(C2,esquina)
+  Iniciar(fisca,1,6)
+  Iniciar(C1,1,5)
+  Iniciar(C2,1,7)
+fin
+{ultima version} 

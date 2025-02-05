@@ -1,0 +1,125 @@
+
+programa ejemplo
+procesos
+  proceso juntarFlores (ES flo:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+  fin
+  proceso juntarPapeles (ES pap:numero)
+  comenzar
+    si (HayPapelEnLaEsquina)
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        pap:= pap +1
+  fin
+areas
+  areaAzul: AreaPC (2,4,12,24)
+  areaVerde: AreaPC(16,4,26,24)
+  areaF: AreaP (1,1,1,1)
+robots
+  robot florero
+  variables
+    grupo,flo,av,ca:numero
+  comenzar  
+    flo:=0
+    RecibirMensaje(grupo,fisca)
+    derecha
+    repetir 4
+      juntarFlores(flo)
+      mover
+    juntarFlores(flo)
+    si (grupo=1)
+      av:=7
+    sino
+      av:=21
+    ca:=12
+    BloquearEsquina(av,ca)
+    mover
+    juntarFlores(flo)
+    mover
+    LiberarEsquina(av,ca)
+    repetir 4
+      juntarFlores(flo)
+      mover
+    juntarFlores(flo)
+    si (av=7)
+      EnviarMensaje(flo,A2)
+    sino
+      EnviarMensaje(flo,V2)
+  fin
+  robot papelero
+  variables
+    pap,grupo,av,flo,ca:numero
+  comenzar
+    pap:=0
+    RecibirMensaje(grupo,fisca)
+    repetir 7
+      juntarPapeles(pap)
+      mover
+    juntarPapeles(pap)
+    si (grupo=1)
+      av:=7
+    sino
+      av:=21
+    ca:=12
+    BloquearEsquina(av,ca)
+    mover
+    juntarPapeles(pap)
+    mover
+    LiberarEsquina(av,ca)
+    repetir 11
+      juntarPapeles(pap)
+      mover
+    juntarPapeles(pap)
+    si (av=7)
+      RecibirMensaje(flo,A1)
+    sino
+      RecibirMensaje(flo,V1)
+    pap:= (pap + flo)
+    EnviarMensaje(grupo,fisca)
+    EnviarMensaje(pap,fisca)
+  fin
+  robot fiscalizador
+  variables
+    grupo,pap,flo,tot1,tot2:numero
+  comenzar
+    tot1:=0
+    tot2:=0
+    EnviarMensaje(1,A2)
+    EnviarMensaje(1,A1)
+    EnviarMensaje(2,V2)
+    EnviarMensaje(2,V1)
+    repetir 2
+      RecibirMensaje(grupo,*)
+      Informar(grupo)
+      si (grupo=1)
+        RecibirMensaje(tot1,A2)
+      sino
+        RecibirMensaje(tot2,V2)
+    
+    si (tot1>tot2)
+      Informar('grupo azul',tot1)
+    sino
+      Informar('grupo verde',tot2)
+  fin
+variables
+  A1: florero
+  A2: papelero
+  V1: florero
+  V2: papelero
+  fisca: fiscalizador
+comenzar
+  AsignarArea(fisca,areaF)
+  AsignarArea(A1,areaAzul)
+  AsignarArea(A2,areaAzul)
+  AsignarArea(V1,areaVerde)
+  AsignarArea(V2,areaVerde)
+  Iniciar(fisca,1,1)
+  Iniciar(A1,2,12)
+  Iniciar(A2,7,4)
+  Iniciar(V1,16,12)
+  Iniciar(V2,21,4)
+fin
