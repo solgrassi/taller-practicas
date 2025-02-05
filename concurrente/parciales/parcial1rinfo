@@ -1,0 +1,171 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1,C1)
+    EnviarMensaje(2,C2)
+    EnviarMensaje(3,C3)
+    EnviarMensaje(4,C4)
+  fin
+  proceso vaciarBolsa
+  comenzar
+    si (HayFlorEnLaBolsa)
+      mientras (HayFlorEnLaBolsa)
+        depositarFlor
+    si (HayPapelEnLaBolsa)
+      mientras (HayPapelEnLaBolsa)
+        depositarPapel
+  fin
+  proceso comenzarPrimeraE
+  comenzar
+    EnviarMensaje(V,C1)
+    EnviarMensaje(V,C2)
+    EnviarMensaje(V,C3)
+    EnviarMensaje(V,C4)
+  fin
+  proceso hacerPrimerEtapa (E ca:numero; E id:numero)
+  variables
+    flo:numero
+  comenzar
+    flo:=0
+    repetir 18
+      si (HayFlorEnLaEsquina)
+        tomarFlor
+        flo:= flo +1
+      mover
+    si (HayFlorEnLaEsquina)
+      tomarFlor
+      flo:= flo +1
+    si (flo<>0)
+      repetir flo
+        BloquearEsquina(1,6)
+        Pos(1,6)
+        depositarFlor
+        si ~(HayFlorEnLaBolsa)
+          EnviarMensaje(id,fisca)
+        Pos(20,ca)
+        LiberarEsquina(1,6)
+    sino
+      EnviarMensaje(id,fisca)
+  fin
+  proceso enviarGanadores(E semi1:numero; E semi2:numero)
+  variables
+    co1,co2,co3,co4: boolean
+  comenzar
+    co1:=F
+    co2:=F
+    co3:=F
+    co4:=F
+    repetir 2
+      si (semi1=1)
+        co1:=V
+      sino
+        si (semi1=2)
+          co2:=V
+        sino
+          si (semi1=3)
+            co3:=V
+          sino
+            co4:=V
+      semi1:=semi2
+    EnviarMensaje(co1,C1)
+    EnviarMensaje(co2,C2)
+    EnviarMensaje(co3,C3)
+    EnviarMensaje(co4,C4)
+  fin
+  proceso hacerFinal (E id:numero; E av:numero; E ca:numero)
+  variables
+    pap:numero
+  comenzar
+    pap:=0
+    repetir 2
+      derecha
+    repetir 18
+      si (HayPapelEnLaEsquina)
+        tomarPapel
+        pap:= pap +1
+      mover
+    si (HayPapelEnLaEsquina)
+      tomarPapel
+      pap:= pap +1
+    si (pap<>0)
+      repetir pap
+        BloquearEsquina(1,6)
+        Pos(1,6)
+        depositarPapel
+        si ~(HayPapelEnLaBolsa) 
+          EnviarMensaje(id,fisca)
+        Pos(2,ca)
+        LiberarEsquina(1,6)
+    sino
+      EnviarMensaje(id,fisca)
+  fin
+areas
+  areaF: AreaP (1,5,1,5)
+  area1: AreaP (1,1,20,1)
+  area2: AreaP (1,2,20,2)
+  area3: AreaP (1,3,20,3)
+  area4: AreaP (1,4,20,4)
+  deposito: AreaPC (1,6,1,6)
+robots
+  robot corredor
+  variables
+    id,av,ca:numero
+    comienzo,gane: boolean
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    RecibirMensaje(id,fisca)
+    derecha
+    vaciarBolsa
+    mover
+    RecibirMensaje(comienzo,fisca)
+    si (comienzo)
+      hacerPrimerEtapa(ca, id)
+    RecibirMensaje(gane,fisca)
+    si (gane)
+      hacerFinal(id,av,ca)
+    Pos(av,ca)
+  fin
+  robot fiscalizador
+  variables
+    id,semi1,semi2,gan: numero
+  comenzar
+    enviarID
+    comenzarPrimeraE
+    RecibirMensaje(semi1,*)
+    RecibirMensaje(semi2,*)
+    repetir 2
+      RecibirMensaje(id,*)
+    enviarGanadores(semi1,semi2)
+    RecibirMensaje(gan, *)
+    RecibirMensaje(id,*)
+    Informar('ganador',gan)
+  fin           
+variables
+  C1: corredor
+  C2: corredor
+  C3: corredor
+  C4: corredor
+  fisca: fiscalizador
+comenzar
+  AsignarArea(fisca,areaF)
+  AsignarArea(C1,area1)
+  AsignarArea(C1,deposito)
+  AsignarArea(C2,area2)
+  AsignarArea(C2,deposito)
+  AsignarArea(C3,area3)
+  AsignarArea(C3,deposito)
+  AsignarArea(C4,area4)
+  AsignarArea(C4,deposito)
+  Iniciar(fisca,1,5)
+  Iniciar(C1,1,1)
+  Iniciar(C2,1,2)
+  Iniciar(C3,1,3)
+  Iniciar(C4,1,4)
+fin
